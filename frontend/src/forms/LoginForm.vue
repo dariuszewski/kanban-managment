@@ -1,5 +1,11 @@
 <script setup>
   import { ref, reactive, computed, watch } from 'vue'
+  import { useUserStore } from "@/stores/user"
+  import router from '../router'
+
+  const userStore = useUserStore()
+  const isLoggedIn = computed(() => userStore.isLoggedIn)
+  const user = computed(() => userStore.user)
 
   // form validation
   const rules = {
@@ -13,15 +19,46 @@
     ]
   }
 
-  const loginForm = ref({
+  const loginForm = reactive({
     email: '',
     password: '',
-    formValid: false
+    formValid: false,
+    error: false
   })
+
+  const login = async () => {
+    loginForm.error = false
+    if (loginForm.formValid) {
+      try {
+        const response = await userStore.signIn(loginForm.email, loginForm.password); // this will define global user
+        if (user.value) {
+          router.push('/');
+        } else {
+          loginForm.error = 'Email or password is incorrect.';
+          console.log(loginForm.error);
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 
 </script>
 <template>
-  <v-form v-model="loginForm.formValid" lazy-validation>
+  <v-form 
+    v-model="loginForm.formValid" 
+    lazy-validation
+    @submit.prevent="login"
+  >
+    <!-- alert modal -->
+    <v-alert v-if="loginForm.error" color="red" class="mt-2 mb-5" :dismissible="true">
+      {{ loginForm.error }}
+      <template v-slot:close>
+        <v-icon @click="loginForm.error = false">mdi-close</v-icon>
+      </template>
+    </v-alert>
+    <!-- end of alert modal -->
+
     <v-text-field
       label="Email"
       type="email"

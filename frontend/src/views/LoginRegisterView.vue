@@ -8,30 +8,29 @@
 
 <template>
   <v-app >
-  <v-container lass="text-center">
+  <v-container class="text-center">
     <v-row class="mt-5 text-center">
 
       <!-- LEFT LANDING -->
-      <v-col sm="6" xs="12" class="mt-12">
+      <v-col sm="6" xs="12">
         <v-container class="text-center">
+          <h1>Kanban Managment</h1>
           <v-img
             alt="Vue logo"
-            src="./src/assets/plane.png"
-            width="125"
-            height="125"
+            src="./src/assets/Dunder-Mifflin-Symbol.png"
+            width="250"
+            height="250"
             class="mx-auto"
           />
-          <h1>Kanban Managment</h1>
-          <br>
           <p>Fly through your workflow with <br> our kanban management system.</p>
         </v-container>
       </v-col>
       <!-- END OF LEFT LANDING -->
-      <v-divider vertical :thickness="2" color="white"></v-divider>
+      <v-divider vertical :thickness="2" color="black"></v-divider>
       <!-- RIGHT LOGIN -->
       <v-col sm="5" xs="12">
         <v-row>
-          <v-container class="text-center mt-12 mb-2">
+          <v-container class="text-center mt-5 mb-2">
             <v-col xs="12">
                 <h2 class="mb-5">GET STARTED</h2>
             </v-col>
@@ -71,7 +70,9 @@
 
     <v-dialog 
       v-model="showLoginForm" 
-      max-width="500">
+      max-width="500"
+      max-height="600"
+      >
       <login-register-forms />
     </v-dialog>
 

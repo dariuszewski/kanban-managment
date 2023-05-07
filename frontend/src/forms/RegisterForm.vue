@@ -1,13 +1,26 @@
 <script setup>
-  import { reactive } from 'vue'
+  import { reactive, computed } from 'vue'
+  import { useUserStore } from "@/stores/user"
+  import router from '../router'
+
+  const userStore = useUserStore()
+  const user = computed(() => userStore.user)
+
 
   const rules = {
-    login: [
-      v => !!v || 'Login is required',
+    firstName: [
+      v => !!v || 'First name is required',
       v =>
         (v &&
           /^[a-zA-Z][a-zA-Z0-9]{2,14}$/.test(v)) ||
-        'Login must be 3-15 letters, start with a letter, and not contain special characters'
+        'First name must be 3-15 letters, start with a letter, and not contain special characters'
+    ],
+    lastName: [
+      v => !!v || 'Last name is required',
+      v =>
+        (v &&
+          /^[a-zA-Z][a-zA-Z0-9]{2,14}$/.test(v)) ||
+        'Last name must be 3-15 letters, start with a letter, and not contain special characters'      
     ],
     email: [
       v => !!v || 'E-mail is required',
@@ -26,23 +39,60 @@
   }
 
   const registerForm = reactive({
-    login: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     repeatPassword: '',
-    formValid: false
+    formValid: false,
+    error: false
   })
+
+  const register = async () => {
+    registerForm.error = false
+    if (registerForm.formValid) {
+      try {
+        const registeredUser = await userStore.signUp(
+          registerForm.firstName,
+          registerForm.lastName,
+          registerForm.email,
+          registerForm.password
+        );
+        const response = await userStore.signIn(registerForm.email, registerForm.password);
+        if (user.value) {
+          router.push('/');
+        } else {
+          registerForm.error = 'Email or password is incorrect.';
+          console.log(registerForm.error);
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 
   
 </script>
 <template>
-  <v-form v-model="registerForm.formValid" lazy-validation>
+  <v-form 
+    v-model="registerForm.formValid" 
+    lazy-validation
+    @submit.prevent="register"
+    >
     <v-text-field
-      label="Login"
+      label="First Name"
       type="text"
-      placeholder="Enter your login"
-      :rules="rules.login"
-      v-model="registerForm.login"
+      placeholder="Enter your first name"
+      :rules="rules.firstName"
+      v-model="registerForm.firstName"
+    >
+    </v-text-field>
+    <v-text-field
+      label="Last Name"
+      type="text"
+      placeholder="Enter your last name"
+      :rules="rules.lastName"
+      v-model="registerForm.lastName"
     >
     </v-text-field>
     <v-text-field
