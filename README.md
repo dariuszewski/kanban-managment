@@ -1,6 +1,6 @@
 # KANBAN MANAGMENT APP
 
-This is a web applicaiton that allows you to manage your tasks with the Kanban method. With this app you can create boards, add people to your boards, create tasks, and track the progress of your work.
+This is a web applicaiton of fictional company Dunder Mifflin, which allows it to manage tasks with the Kanban method. With this app you can create boards, add people to your boards, create tasks, and track the progress of your work.
 
 ## Sign In/Sign Up
 
