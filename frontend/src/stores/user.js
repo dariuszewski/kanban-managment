@@ -3,7 +3,7 @@ import usersMock from "@/usersMock.js";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
   }),
 
   getters: {
@@ -17,6 +17,7 @@ export const useUserStore = defineStore("user", {
       // Simulate fetching the user from the server
       // In a real implementation, you would fetch the user from an API endpoint
       const user = usersMock.find((u) => u.id === 1);
+      localStorage.setItem('user', JSON.stringify(user));
       this.user = user;
     },
 
@@ -31,6 +32,7 @@ export const useUserStore = defineStore("user", {
         password: password,
       };
       usersMock.push(newUser);
+      localStorage.setItem('user', JSON.stringify(newUser))
       this.user = newUser;
     },
 
@@ -39,6 +41,7 @@ export const useUserStore = defineStore("user", {
       // In a real implementation, you would send the login data to an API endpoint
       const user = usersMock.find((u) => u.email === email && u.password === password);
       console.log('user:', user)
+      localStorage.setItem('user', JSON.stringify(user));
       this.user = user;
     },
   },

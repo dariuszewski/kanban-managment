@@ -1,10 +1,15 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+import NavBar from './components/NavBar.vue'
+
+const route = useRoute()
 </script>
 
 <template>
-  <RouterView />
+  <div>
+    <nav-bar v-if="route.name != 'login'" />
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>
