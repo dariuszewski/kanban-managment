@@ -7,8 +7,18 @@ const route = useRoute()
 
 <template>
   <div>
-    <nav-bar v-if="route.name != 'login'" />
-    <RouterView />
+    <v-container>
+    <v-row>
+      <v-col class="sm-1">
+      <nav-bar v-if="route.name != 'login'" />
+      </v-col>
+      <v-col class="sm-11">
+      <RouterView />
+      </v-col>
+    </v-row>
+    </v-container>
+    test
+    
   </div>
 </template>
 
