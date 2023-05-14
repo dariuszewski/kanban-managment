@@ -4,14 +4,14 @@ const usersMock = [
     id: 1,
     firstName: 'John',
     lastName: 'Doe',
-    email: 'johndoe@example.com',
+    email: 'john.doe@example.com',
     password: 'asdfghjk', // 'password'
     },
     {
     id: 2,
     name: 'Jane',
     lastName: 'Smith',
-    email: 'janesmith@example.com',
+    email: 'jane.smith@example.com',
     password: 'qwertyui', // 'password'
     },
 ]

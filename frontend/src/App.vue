@@ -6,10 +6,12 @@ const route = useRoute()
 </script>
 
 <template>
-  <div>
+  <v-layout>
     <nav-bar v-if="route.name != 'login'" />
-    <RouterView />
-  </div>
+    <v-main>
+      <RouterView />
+    </v-main>
+  </v-layout>
 </template>
 
 <style scoped>

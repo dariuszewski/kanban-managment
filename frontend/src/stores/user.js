@@ -3,7 +3,7 @@ import usersMock from "@/usersMock.js";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
-    user: JSON.parse(localStorage.getItem('user')) || null,
+    user: JSON.parse(localStorage.getItem('user')) || {value: {email: "some.email@example.com"}}, // mock user
   }),
 
   getters: {
