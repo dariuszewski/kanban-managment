@@ -20,7 +20,8 @@ const user = computed(() => userStore.user)
 </script>
 
 <template>
-  <v-container>
+<div class="main-wrapper">
+  <!-- <v-container> -->
     <!-- header -->
     <v-row class="mt-5">
       <h1>Hello, {{ user.firstName }}</h1>
@@ -36,8 +37,10 @@ const user = computed(() => userStore.user)
       xs="12"
       sm="4"
       md="3"
+      class="mb-2"
     >
-      <project-card 
+      <project-card
+        :id="project.id"
         :name="project.name"
         :progress="(done/all)*100"
       />
@@ -58,7 +61,8 @@ const user = computed(() => userStore.user)
     
     </v-row>
     <!-- end of projects section -->
-  </v-container>
+  <!-- </v-container> -->
+  </div>
 </template>
 
 
@@ -72,5 +76,5 @@ const user = computed(() => userStore.user)
     cursor: pointer;
     background-color: rgb(227, 227, 227)
   }
-  
+
 </style>

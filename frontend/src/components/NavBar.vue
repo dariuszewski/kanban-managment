@@ -47,8 +47,11 @@ console.log(user.value)
 </template>
 
 <style scoped>
-a.router-link-active {
-  color: black;
-}
-
+  a.router-link-active {
+    text-decoration: underline;
+  }
+  a {
+    color: black;
+    text-decoration: none;
+  }
 </style>

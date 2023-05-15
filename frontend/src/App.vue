@@ -9,11 +9,20 @@ const route = useRoute()
   <v-layout>
     <nav-bar v-if="route.name != 'login'" />
     <v-main>
-      <RouterView />
+      <div class="main">
+        <RouterView />
+      </div>
     </v-main>
   </v-layout>
 </template>
 
-<style scoped>
+<style>
 
+@media (min-width: 1024px) {
+  .main {
+    min-height: 100vh;
+    margin-left: 5%;
+    align-items: center;
+  }
+}
 </style>

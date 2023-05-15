@@ -1,10 +1,11 @@
 <script setup>
 import { ref, reactive, computed, defineProps } from "vue";
-import { useTheme } from "vuetify";
+import router from '../router'
 
 import projectsMock from "@/projectsMock.js";
 
 const props = defineProps({
+  id: Number,
   name: String,
   progress: Number,
 });
@@ -24,9 +25,13 @@ const all = ref(10);
           <v-btn icon="mdi-dots-vertical" v-bind="props" flat></v-btn>
         </template>
         <v-list>
+        
+          <router-link :to="{ name: 'project', params: { id: props.id } }">
           <v-list-item class="menu-item" clickable>
             <v-list-item-title>Open</v-list-item-title>
           </v-list-item>
+          </router-link>
+
           <v-list-item class="menu-item" clickable>
             <v-list-item-title>Manage</v-list-item-title>
           </v-list-item>
@@ -58,6 +63,7 @@ const all = ref(10);
 
 
 <style scoped>
+
 h3 {
   color: rgb(219, 219, 219);
 }
@@ -70,9 +76,15 @@ h3 {
 .project-name {
   font-size: 20px;
 }
+
 .progress-wrapper {
   width: 80%;
   margin: auto;
+}
+
+a {
+  color: black;
+  text-decoration: none;
 }
 
 </style>
