@@ -78,47 +78,42 @@
     v-model="registerForm.formValid" 
     lazy-validation
     @submit.prevent="register"
-    >
+  >
     <v-text-field
+      v-model="registerForm.firstName"
       label="First Name"
       type="text"
       placeholder="Enter your first name"
       :rules="rules.firstName"
-      v-model="registerForm.firstName"
-    >
-    </v-text-field>
+    />
     <v-text-field
+      v-model="registerForm.lastName"
       label="Last Name"
       type="text"
       placeholder="Enter your last name"
       :rules="rules.lastName"
-      v-model="registerForm.lastName"
-    >
-    </v-text-field>
+    />
     <v-text-field
+      v-model="registerForm.email"
       label="Email"
       type="email"
       placeholder="Enter your email"
       :rules="rules.email"
-      v-model="registerForm.email"
-    >
-    </v-text-field>
+    />
     <v-text-field
+      v-model="registerForm.password"
       label="Password"
       type="password"
       placeholder="Enter your password"
       :rules="rules.password"
-      v-model="registerForm.password"
-    >
-    </v-text-field>
+    />
     <v-text-field
+      v-model="registerForm.repeatPassword"
       label="Repeat Password"
       type="password"
       placeholder="Repeat your password"
       :rules="rules.repeatPassword"
-      v-model="registerForm.repeatPassword"
-    >
-    </v-text-field>
+    />
     <v-btn
       class="login-btn"
       type="submit"
