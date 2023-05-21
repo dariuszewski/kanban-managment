@@ -16,35 +16,23 @@ const all = ref(10);
 </script>
 
 <template>
-  <v-card
-    class="align-center"
-    height="200"
-    width="200"
-  >
+  <v-card class="align-center" height="200" width="200">
+
     <v-toolbar class="card-top">
-      <v-spacer />
+      <v-spacer></v-spacer>
       <v-menu>
-        <template #activator="{ props }">
-          <v-btn
-            icon="mdi-dots-vertical"
-            v-bind="props"
-            flat
-          />
+        <template v-slot:activator="{ props }">
+          <v-btn icon="mdi-dots-vertical" v-bind="props" flat></v-btn>
         </template>
         <v-list>
+        
           <router-link :to="{ name: 'project', params: { id: props.id } }">
-            <v-list-item
-              class="menu-item"
-              clickable
-            >
-              <v-list-item-title>Open</v-list-item-title>
-            </v-list-item>
+          <v-list-item class="menu-item" clickable>
+            <v-list-item-title>Open</v-list-item-title>
+          </v-list-item>
           </router-link>
 
-          <v-list-item
-            class="menu-item"
-            clickable
-          >
+          <v-list-item class="menu-item" clickable>
             <v-list-item-title>Manage</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -52,9 +40,7 @@ const all = ref(10);
     </v-toolbar>
 
     <div class="text-center">
-      <v-card-text class="project-name">
-        {{ props.name }}
-      </v-card-text>
+      <v-card-text class="project-name">{{ props.name }}</v-card-text>
       <div class="progress-wrapper">
         <div class="progress-bar">
           <v-progress-linear
@@ -65,11 +51,13 @@ const all = ref(10);
             height="8"
             rounded
             dense
-          />
+          >
+          </v-progress-linear>
           {{ props.progress }}%
         </div>
       </div>
     </div>
+
   </v-card>
 </template>
 
