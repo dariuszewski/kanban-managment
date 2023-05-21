@@ -9,8 +9,8 @@ const route = useRoute()
   <v-layout>
     <nav-bar v-if="route.name != 'login'" />
     <v-main>
-      <div class="main">
-        <RouterView />
+    <div class="main">
+    <RouterView />
       </div>
     </v-main>
   </v-layout>
