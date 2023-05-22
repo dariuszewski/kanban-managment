@@ -6,8 +6,6 @@ import { useUserStore } from "@/stores/user"
 import ProjectCard from "@/components/ProjectCard.vue"
 import projectsMock from "@/projectsMock.js"
 
-import NavBar from '../components/NavBar.vue'
-
 const pinia = createPinia() 
 const userStore = useUserStore(pinia) // currently its used only to show user, but will be needed to load projects (probably)
 

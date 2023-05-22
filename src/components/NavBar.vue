@@ -23,6 +23,7 @@ console.log(user.value)
     expand-on-hover
     rail
     permanent
+    color="#1E293C"
   >
     <v-list>
       <v-list-item
@@ -35,26 +36,32 @@ console.log(user.value)
     <v-divider />
 
     <v-list
-      density="compact"
       nav
     >
-      <router-link to="/projects">
+      <v-list-item-group>
+        <router-link
+          to="/projects"
+          style="text-decoration: none; color: inherit;"
+        >
+          <v-list-item
+            title="Projects"   
+          > 
+              <template v-slot:prepend>
+                <v-icon icon="mdi-folder" style="color: #FFFFF;" />
+              </template>
+          </v-list-item>
+        </router-link>
         <v-list-item
-          prepend-icon="mdi-folder"
-          title="Projects"
-          value="myfiles"
+          prepend-icon="mdi-account-multiple"
+          title="Shared with me"
+          value="shared"
         />
-      </router-link>
-      <v-list-item
-        prepend-icon="mdi-account-multiple"
-        title="Shared with me"
-        value="shared"
-      />
-      <v-list-item
-        prepend-icon="mdi-star"
-        title="Starred"
-        value="starred"
-      />
+        <v-list-item
+          prepend-icon="mdi-star"
+          title="Starred"
+          value="starred"
+        />
+      </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
 </template>

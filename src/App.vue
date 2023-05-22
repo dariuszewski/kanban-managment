@@ -7,16 +7,23 @@ const route = useRoute()
 
 <template>
   <v-layout>
-    <nav-bar v-if="route.name != 'login'" />
+    <nav-bar
+      v-if="route.name != 'login'"
+      class="navbar"
+    />
     <v-main>
-    <div class="main">
-    <RouterView />
+      <div class="main">
+        <RouterView />
       </div>
     </v-main>
   </v-layout>
 </template>
 
 <style>
+  @import './assets/global.css';
+  .navbar {
+    background-color: var(--navbar-main);
+  }
 
 @media (min-width: 1024px) {
   .main {
