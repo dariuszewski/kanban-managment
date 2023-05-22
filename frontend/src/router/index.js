@@ -35,6 +35,7 @@ const router = createRouter({
       path: '/projects/:id',
       name: 'project',
       component: ProjectView,
+      props: true,
       beforeEnter: (to, from, next) => {
         // get current project
         const projectId = to.params.id 

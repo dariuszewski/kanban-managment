@@ -68,6 +68,11 @@ const user = computed(() => userStore.user)
 
 <style scoped>
 
+  .main-wrapper {
+    padding: 20px;
+    align-content: center;
+  }
+
   h3 {
     color:rgb(219, 219, 219)
   }
