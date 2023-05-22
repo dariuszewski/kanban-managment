@@ -51,29 +51,40 @@
     @submit.prevent="login"
   >
     <!-- alert modal -->
-    <v-alert v-if="loginForm.error" color="red" class="mt-2 mb-5" :dismissible="true">
+    <v-alert
+      v-if="loginForm.error"
+      color="red"
+      class="mt-2 mb-5"
+      :dismissible="true"
+    >
       {{ loginForm.error }}
-      <template v-slot:close>
-        <v-icon @click="loginForm.error = false">mdi-close</v-icon>
+      <template #close>
+        <v-icon @click="loginForm.error = false">
+          mdi-close
+        </v-icon>
       </template>
     </v-alert>
     <!-- end of alert modal -->
 
     <v-text-field
+      v-model="loginForm.email"
       label="Email"
       type="email"
       placeholder="Enter your email"
       :rules="rules.email"
-      v-model="loginForm.email"
-    ></v-text-field>
+    />
     <v-text-field
+      v-model="loginForm.password"
       label="Password"
       type="password"
       placeholder="Enter your password"
       :rules="rules.password"
-      v-model="loginForm.password"
-    ></v-text-field>
-    <v-btn class="login-btn" type="submit" :disabled="!loginForm.formValid">
+    />
+    <v-btn
+      class="login-btn"
+      type="submit"
+      :disabled="!loginForm.formValid"
+    >
       Submit
     </v-btn>
   </v-form>
