@@ -7,6 +7,7 @@ import LoginRegisterView from '../views/LoginRegisterView.vue'
 import ProjectsView from '../views/ProjectsView.vue'
 import ProjectView from '../views/ProjectView.vue'
 import ForbiddenView from '../views/ForbiddenView.vue'
+import AccountView from '../views/AccountView.vue'
 
 import projectsMock from "@/projectsMock.js"
 const pinia = createPinia()
@@ -30,6 +31,11 @@ const router = createRouter({
       path: '/projects',
       name: 'projects',
       component: ProjectsView
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: AccountView,
     },
     {
       path: '/projects/:id',
