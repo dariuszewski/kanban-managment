@@ -12,9 +12,9 @@ const route = useRoute()
       class="navbar"
     />
     <v-main>
-        <v-card class="main">
+        <div class="main">
           <RouterView />
-        </v-card>
+        </div>
     </v-main>
   </v-layout>
 </template>
@@ -28,6 +28,7 @@ const route = useRoute()
 .main {
   min-height: 100vh;
   margin: 0 2% 0 2%;
+  padding: 0;
 }
 
 </style>
