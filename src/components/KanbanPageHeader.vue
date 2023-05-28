@@ -47,7 +47,7 @@ watch(searchQuery, (newValue) => {
           <VueDatePicker
             v-model="dateRange"
             :enable-time-picker="false"
-            label="date range"
+            :placeholder="'Date Range'"
             input-class-name="dp-custom-input"
             range
           />
@@ -62,6 +62,7 @@ watch(searchQuery, (newValue) => {
               item-value="id"
               v-model="selectedParticipants"
               label="Participants"
+              class="pl-3"
               variant="underlined"
               prepend-inner-icon="mdi-account-search"
               return-object
@@ -78,6 +79,7 @@ watch(searchQuery, (newValue) => {
         <v-sheet class="pa-2">
           <v-text-field
             label="Search"
+            class="pl-3"
             prepend-inner-icon="mdi-magnify"
             variant="underlined"
             v-model="searchQuery"
@@ -118,8 +120,8 @@ watch(searchQuery, (newValue) => {
   height: 48px;
   border: 1px solid white;
   border-bottom: 1px solid #a8a8a8;
-  padding-left: 20%;
-  font-size: 12px;
+  padding-left: 10%;
+  font-size: 16px;
 }
 
 ::v-deep(.dp-custom-input:focus) {
@@ -129,4 +131,5 @@ watch(searchQuery, (newValue) => {
 ::v-deep(.dp-custom-input:hover) {
   border-bottom: 1px solid black;
 }
+
 </style>
