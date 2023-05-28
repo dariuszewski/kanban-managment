@@ -13,7 +13,9 @@ const route = useRoute()
     />
     <v-main>
         <div class="main">
-          <RouterView />
+          <v-app>
+            <RouterView />
+          </v-app>
         </div>
     </v-main>
   </v-layout>

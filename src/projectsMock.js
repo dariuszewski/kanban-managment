@@ -7,9 +7,19 @@ const projectsMock = [
       tasks: [
         {
           owner: 1,
+          id: 1,
+          title: 'Talk to Jenny',
           summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nisl eu massa fringilla egestas vitae euismod erat. Aliquam quis. ',
           dueDate: '2023-06-01',
           status: 'in progress'
+        },
+        {
+          owner: 2,
+          id: 2,
+          title: 'Prepare New Offer',
+          summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nisl eu massa fringilla egestas vitae euismod erat. Aliquam quis. ',
+          dueDate: '2023-06-01',
+          status: 'todo'          
         }
       ]
     },

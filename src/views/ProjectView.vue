@@ -1,25 +1,56 @@
 <script setup>
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted, watch, toRaw } from 'vue'
+import BoardPageHeader from "@/components/BoardPageHeader.vue"
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
 import projectsMock from '@/projectsMock.js';
+import usersMock from '@/usersMock.js';
 
 const props = defineProps({
   id: String
 });
 
 const project = reactive({});
-const tasks = {
-  
+
+let selectedParticipants = ref([]);
+let dateRange = ref();
+let searchQuery = ref('');
+
+function filterTasks(status=false) {
+  return project.tasks.filter(task => {
+    const isWithinDateRange = (!dateRange.value || (Date(task.dueDate) >= Date(dateRange.value[0]) && Date(task.dueDate) <= Date(dateRange.value[1])));
+    const isParticipantSelected = selectedParticipants.value.length === 0 || selectedParticipants.value.some(participant => participant.id === task.owner);
+    const isMatchingSearch = task.summary.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      task.title.toLowerCase().includes(searchQuery.value.toLowerCase());
+    
+    if (status) {
+      return isWithinDateRange && isParticipantSelected && isMatchingSearch && task.status === status;
+    } else {
+      return isWithinDateRange && isParticipantSelected && isMatchingSearch;
+    }
+  });
 }
 
-// Filters
-const startDate = ref(null);
-const endDate = ref(null);
-const allParticipants = reactive(['foo', 'bar', 'fizz', 'buzz', 'fizzbuzz', 'foobar'])
-const selectedParticipants = reactive(['buzz', 'fizzbuzz', 'foobar'])
-// End of filters
+const filteredTodoTasks = computed(() => {
+  return filterTasks('todo')
+})
+
+function _getTaskOwner(taskOwnerId) {
+  return usersMock.filter(user => user.id === taskOwnerId).pop();
+}
+
+function getNameAndLastName(taskOwnerId) {
+  const owner = _getTaskOwner(taskOwnerId);
+  return owner.firstName + ' ' + owner.lastName
+}
+
+function getInitials(taskOwnerId) {
+  const owner = _getTaskOwner(taskOwnerId);
+  return owner.firstName[0] + owner.lastName[0]
+}
+
+
 
 const fetchProject = () => {
   // Simulate an asynchronous API request with a delay
@@ -27,17 +58,14 @@ const fetchProject = () => {
     const p = projectsMock.find((p) => p.id === Number(props.id));
     project.id = p.id;
     project.name = p.name;
-    // Update other project properties accordingly
+    project.tasks = p.tasks;
+    project.participants = usersMock.filter(user => p.participants.includes(user.id));
   }, 500);
 };
 
-const date = ref();
 
 onMounted(() => {
   fetchProject()
-  const startDate = new Date();
-  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-  date.value = [startDate, endDate];
 })
 
 </script>
@@ -45,63 +73,16 @@ onMounted(() => {
 
 <template>
   <div class="main-wrapper">
-    <!-- Header -->
-    <div class="header">
-      <v-row no-gutters>
-        <v-col cols="12" md="3" sm="12" xs="12">
-          <v-sheet class="pa-2 title">
-            {{ project.name }}
-          </v-sheet>
-        </v-col>
-        
-        <v-col cols="12" md="3" sm="4" xs="12">
-          <v-sheet class="pa-2">
-              <VueDatePicker 
-                v-model="date" 
-                :enable-time-picker="false" 
-                label="date range"
-                input-class-name="dp-custom-input"
-                range
-              />
-          </v-sheet>
-        </v-col>
-        <v-col cols="12" md="3" sm="4" xs="12">
-          <v-sheet class="pa-2">
-            <div class="custom-select">
-            <v-select
-              v-model="selectedParticipants"
-              :items="allParticipants"
-              class="custom-select"
-              label="Participants"
-              variant="underlined"
-              prepend-inner-icon="mdi-account-search"
-              multiple
-              chips
-              hide-details
-            >
-            </v-select>
-            </div>
-            
-          </v-sheet>
-        </v-col>
 
-        <v-col cols="12" md="3" sm="4" xs="12">
-          <v-sheet class="pa-2">
-            <v-text-field
-              class="filter-input"
-              label="Search"
-              prepend-inner-icon="mdi-magnify"
-              variant="underlined"
-              v-model="endDate"
-              hide-details
-            ></v-text-field>
-          </v-sheet>
+    <BoardPageHeader
+      :project="project"
+      @update:selectedParticipants="selectedParticipants = $event"
+      @update:dateRange="dateRange = $event"
+      @update:searchQuery="searchQuery = $event"
+    />
 
-        </v-col>
-      </v-row>
-    </div>
-    <!-- End Of Header -->
     <v-divider :thickness="2"></v-divider>
+
     <div class="columns">
       <v-row no-gutters>
 
@@ -110,7 +91,7 @@ onMounted(() => {
           <v-sheet class="pa-2">
             <v-card>
               <v-card-title class="title">
-                To do <span class="tasks-count">3</span>
+                To do <span v-if="project.tasks" class="tasks-count">{{ filteredTodoTasks.length }}</span>
               </v-card-title>
               <v-divider :thickness="2"></v-divider>
               <div class="center-container">
@@ -123,18 +104,21 @@ onMounted(() => {
                   ADD ITEM
                 </v-btn>
               </div>
-              <div class="tasks-wrapper">
-                <div class="task">
+              <div v-if="project.tasks" class="tasks-wrapper">
+                <div v-for="task in filteredTodoTasks" :key="task.id" class="task">
                   <v-card class="task-card">
-                    <div class="task-name">Talk to Jenny <span class="task-due-date">24-01-2023</span></div>
+                    <div class="task-header">
+                      <span class="task-title">{{ task.title }}</span>
+                      <span class="task-due-date">{{ task.dueDate }}</span>
+                    </div>
                     <div class="task-summary">
-                      This is some example task description that should be more descriptive than title and
+                      {{ task.summary }}
                     </div>
                       <div class="task-footer">
-                        <span class="task-id task-summary">#48</span>
-                        <div class="task-owner">
-                          <span class="task-owner-name">Jim Helpert</span>
-                          <span class="task-owner-initials">JH</span>
+                        <span class="task-id task-summary">#{{ task.id }}</span>
+                        <div class="task-owner">                          
+                          <span class="task-owner-name">{{ getNameAndLastName(task.owner) }}</span>
+                          <span class="task-owner-initials">{{ getInitials(task.owner) }}</span>
                         </div>
                       </div>
                   </v-card>
@@ -169,7 +153,10 @@ onMounted(() => {
               <div class="tasks-wrapper">
                 <div class="task">
                   <v-card class="task-card">
-                    <div class="task-name">Talk to Jenny <span class="task-due-date">24-01-2023</span></div>
+                    <div class="task-header">
+                      <span class="task-title">Talk to Jenny</span>
+                      <span class="task-due-date">24-01-2023</span>
+                    </div>
                     <div class="task-summary">
                       This is some example task description that should be more descriptive than title and
                     </div>
@@ -198,12 +185,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
-  .header {
-    margin-top: 10px;
-    align-items: center;
-    text-align: center;
-  }
 
   .title {
     margin-top: 10px;
@@ -242,11 +223,16 @@ onMounted(() => {
     padding: 10px;
   }
 
-  .task-name {
-    font-size: 16px;
+  .task-header {
+    display: flex;
+  }
+
+  .task-title {
+    font-size: 13px;
     font-weight: bold;
     top: 0;
     left: 0;
+    flex-basis: 60%;
   }
 
   .tasks-count {
@@ -260,7 +246,7 @@ onMounted(() => {
     top: 0;
     right: 0;
     margin: 14px;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 100;
   }
 
@@ -296,15 +282,15 @@ onMounted(() => {
 
   .task-owner-name {
     margin-right: 8px;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .task-owner-initials {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px; /* Double the radius for the width */
-    height: 24px; /* Double the radius for the height */
+    width: 22px; /* Double the radius for the width */
+    height: 22px; /* Double the radius for the height */
     border-radius: 50%;
     background-color: blue;
     color: white;
@@ -320,20 +306,5 @@ onMounted(() => {
     background-color: transparent;
   }
 
-  ::v-deep(.dp-custom-input) {
-    height: 48px;
-    border: 1px solid white;
-    border-bottom: 1px solid #a8a8a8;
-    padding-left: 20%;
-    font-size: 12px;
-  }
-
-  ::v-deep(.dp-custom-input:focus) {
-    border-bottom: 2px solid black;
-  }
-
-  ::v-deep(.dp-custom-input:hover) {
-    border-bottom: 1px solid black;
-  }
 
 </style>

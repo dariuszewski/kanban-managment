@@ -1,104 +1,103 @@
 <script setup>
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
-import projectsMock from '@/projectsMock.js';
 
+// This values will be passed on render by a parent component.
 const props = defineProps({
-  id: String
-});
-
-const project = reactive({});
-
-// Filters
-const startDate = ref(null);
-const endDate = ref(null);
-const allParticipants = reactive(['foo', 'bar', 'fizz', 'buzz', 'fizzbuzz', 'foobar'])
-const selectedParticipants = reactive(['buzz', 'fizzbuzz', 'foobar'])
-// End of filters
-
-const fetchProject = () => {
-  // Simulate an asynchronous API request with a delay
-  setTimeout(() => {
-    const p = projectsMock.find((p) => p.id === Number(props.id));
-    project.id = p.id;
-    project.name = p.name;
-    // Update other project properties accordingly
-  }, 500);
-};
-
-const date = ref();
-
-onMounted(() => {
-  fetchProject()
-  const startDate = new Date();
-  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-  date.value = [startDate, endDate];
+  project: Object,
 })
+
+// set variables for filters.
+let dateRange = ref();
+let selectedParticipants = ref([]);
+let searchQuery = ref('');
+
+// watch changes of the variables and emit them to a parent.
+const emit = defineEmits([
+  'update:selectedParticipants', 'update:dateRange', 'update:searchQuery'
+]);
+
+watch(dateRange, (newValue) => {
+  emit('update:dateRange', newValue);
+});
+watch(selectedParticipants, (newValue) => {
+  emit('update:selectedParticipants', newValue);
+});
+watch(searchQuery, (newValue) => {
+  emit('update:searchQuery', newValue);
+});
 
 </script>
 
 
 <template>
-    <div class="header">
-      <v-row no-gutters>
-        <v-col cols="12" md="3" sm="12" xs="12">
-          <v-sheet class="pa-2 title">
-            {{ project.name }}
-          </v-sheet>
-        </v-col>
-        
-        <v-col cols="12" md="3" sm="4" xs="12">
-          <v-sheet class="pa-2">
-              <VueDatePicker 
-                v-model="date" 
-                :enable-time-picker="false" 
-                label="date range"
-                input-class-name="dp-custom-input"
-                range
-              />
-          </v-sheet>
-        </v-col>
-        <v-col cols="12" md="3" sm="4" xs="12">
-          <v-sheet class="pa-2">
-            <div class="custom-select">
-            <v-select
-              v-model="selectedParticipants"
-              :items="allParticipants"
-              class="custom-select"
-              label="Participants"
-              variant="underlined"
-              prepend-inner-icon="mdi-account-search"
-              multiple
-              chips
-              hide-details
-            >
-            </v-select>
-            </div>
-            
-          </v-sheet>
-        </v-col>
+  <!-- Header -->
+  <div class="header">
+  <p>{{ dateRange }}</p>
+  <p>{{ selectedParticipants }}</p>
+  <p>{{ searchQuery }}</p>
+    <v-row no-gutters>
+      <v-col cols="12" md="3" sm="12" xs="12">
+        <v-sheet class="pa-2 title">
+          {{ props.project.name }}
+        </v-sheet>
+      </v-col>
+      
+      <v-col cols="12" md="3" sm="4" xs="12">
+        <v-sheet class="pa-2">
+            <VueDatePicker 
+              v-model="dateRange" 
+              :enable-time-picker="false" 
+              label="date range"
+              input-class-name="dp-custom-input"
+              range
+            />
+        </v-sheet>
+      </v-col>
+      <v-col cols="12" md="3" sm="4" xs="12">
+        <v-sheet class="pa-2">
+          <div class="custom-select">
+          <v-select
+            :items="project.participants"
+            item-title="fullName"
+            item-value="id"
+            v-model="selectedParticipants"
+            class="custom-select"
+            label="Participants"
+            variant="underlined"
+            prepend-inner-icon="mdi-account-search"
+            return-object
+            multiple
+            chips
+            hide-details
+          >
+          </v-select>
+          </div>
+          
+        </v-sheet>
+      </v-col>
 
-        <v-col cols="12" md="3" sm="4" xs="12">
-          <v-sheet class="pa-2">
-            <v-text-field
-              class="filter-input"
-              label="Search"
-              prepend-inner-icon="mdi-magnify"
-              variant="underlined"
-              v-model="endDate"
-              hide-details
-            ></v-text-field>
-          </v-sheet>
+      <v-col cols="12" md="3" sm="4" xs="12">
+        <v-sheet class="pa-2">
+          <v-text-field
+            class=" pa-2 filter-input"
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="underlined"
+            v-model="searchQuery"
+            hide-details
+          ></v-text-field>
+        </v-sheet>
 
-        </v-col>
-      </v-row>
-    </div>
+      </v-col>
+    </v-row>
+  </div>
+  <!-- End Of Header -->
 </template>
 
 <style scoped>
-
   .header {
     margin-top: 10px;
     align-items: center;
@@ -110,6 +109,16 @@ onMounted(() => {
     color: #5F6E72;
     font-weight: 600;
     font-size: 22px;
+  }
+
+  .columns {
+    margin-top: 20px;
+  }
+
+  .center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   ::v-deep(.dp-custom-input) {
@@ -127,5 +136,4 @@ onMounted(() => {
   ::v-deep(.dp-custom-input:hover) {
     border-bottom: 1px solid black;
   }
-
 </style>
