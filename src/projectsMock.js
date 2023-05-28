@@ -11,7 +11,7 @@ const projectsMock = [
           title: 'Talk to Jenny',
           summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nisl eu massa fringilla egestas vitae euismod erat. Aliquam quis. ',
           dueDate: '2023-06-01',
-          status: 'in progress'
+          status: 'In Progress'
         },
         {
           owner: 2,
@@ -19,7 +19,15 @@ const projectsMock = [
           title: 'Prepare New Offer',
           summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nisl eu massa fringilla egestas vitae euismod erat. Aliquam quis. ',
           dueDate: '2023-06-01',
-          status: 'todo'          
+          status: 'To Do'          
+        },
+        {
+          owner: 1,
+          id: 3,
+          title: 'Register on DMI',
+          summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nisl eu massa fringilla egestas vitae euismod erat. Aliquam quis. ',
+          dueDate: '2023-06-05',
+          status: 'To Do'          
         }
       ]
     },
