@@ -40,11 +40,13 @@ const router = createRouter({
     {
       path: '/projects/:id',
       name: 'project',
+      props: true,
       component: ProjectView,
       beforeEnter: (to, from, next) => {
         // get current project
         const projectId = to.params.id 
         const currentProject = projectsMock.filter(p => p.id == projectId).pop()
+        // TODO: Add if not currentProject then Not Found
         // get user and check if participates in a project
         const userId = userStore.user.id || null
         const userBelongsToProject = currentProject.participants.includes(userId)
