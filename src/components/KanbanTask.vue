@@ -46,7 +46,6 @@ function getInitials(taskOwnerId) {
 <style scoped>
 .task {
   margin-bottom: 20px;
-  width: 80%;
 }
 
 .task-card {
