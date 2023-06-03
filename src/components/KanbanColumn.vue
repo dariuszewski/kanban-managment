@@ -1,5 +1,4 @@
 <script setup>
-import { reactive } from "vue";
 
 const props = defineProps({
   status: String,
@@ -70,6 +69,7 @@ const props = defineProps({
 
 .tasks-wrapper {
   margin: 20px 0 20px 0;
+  padding: 0 10% 0 10%;
   min-height: 100px;
   display: flex;
   justify-content: center;

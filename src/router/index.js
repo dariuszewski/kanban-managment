@@ -9,6 +9,8 @@ import ProjectView from '../views/ProjectView.vue'
 import ForbiddenView from '../views/ForbiddenView.vue'
 import AccountView from '../views/AccountView.vue'
 
+import DraggableView from '../views/DraggableView.vue'
+
 import projectsMock from "@/projectsMock.js"
 const pinia = createPinia()
 const userStore = useUserStore(pinia)
@@ -21,6 +23,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
+    },
+    {
+      path: '/drag/:id',
+      name: 'drag',
+      component: DraggableView,
+      props: true,
     },
     {
       path: '/login',
@@ -44,7 +52,7 @@ const router = createRouter({
       component: ProjectView,
       beforeEnter: (to, from, next) => {
         // get current project
-        const projectId = to.params.id 
+        const projectId = to.params.id
         const currentProject = projectsMock.filter(p => p.id == projectId).pop()
         // TODO: Add if not currentProject then Not Found
         // get user and check if participates in a project
