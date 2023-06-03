@@ -9,7 +9,6 @@ import ProjectView from '../views/ProjectView.vue'
 import ForbiddenView from '../views/ForbiddenView.vue'
 import AccountView from '../views/AccountView.vue'
 
-import DraggableView from '../views/DraggableView.vue'
 
 import projectsMock from "@/projectsMock.js"
 const pinia = createPinia()
@@ -23,12 +22,6 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
-    },
-    {
-      path: '/drag/:id',
-      name: 'drag',
-      component: DraggableView,
-      props: true,
     },
     {
       path: '/login',
