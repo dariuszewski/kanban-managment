@@ -1,51 +1,9 @@
 <script setup>
-import { ref, reactive, onMounted } from "vue";
-import { useProjectStore } from "@/stores/project";
 
 const props = defineProps({
   status: String,
   tasksCount: Number,
-  tasks: Array
 });
-
-const projectStore = useProjectStore()
-
-// const tasks = ref(projectStore.currentProject.tasks.filter(task => task.status === props.status));
-
-
-// defined on both - column and filters!
-// let selectedParticipants = ref([]);
-// let dateRange = ref();
-// let searchQuery = ref("");
-
-// function filterTasks(status = false) {
-//   return tasks.filter((task) => {
-//     const isWithinDateRange =
-//       !dateRange.value ||
-//       (new Date(task.dueDate) >= dateRange.value[0].setHours(0, 0, 0, 0) &&
-//        new Date(task.dueDate) <= dateRange.value[1].setHours(0, 0, 0, 0));
-//     const isParticipantSelected =
-//       selectedParticipants.value.length === 0 ||
-//       selectedParticipants.value.some(
-//         (participant) => participant.id === task.owner
-//       );
-//     const isMatchingSearch =
-//       task.summary.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-//       task.title.toLowerCase().includes(searchQuery.value.toLowerCase());
-
-//     if (status) {
-//       return (
-//         isWithinDateRange &&
-//         isParticipantSelected &&
-//         isMatchingSearch &&
-//         task.status === status
-//       );
-//     } else {
-//       return isWithinDateRange && isParticipantSelected && isMatchingSearch;
-//     }
-//   });
-// }
-
 
 </script>
 

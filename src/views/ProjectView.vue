@@ -10,56 +10,70 @@ import projectsMock from "@/projectsMock.js";
 import usersMock from "@/usersMock.js";
 
 
-
 const props = defineProps({
   id: String,
 });
 
-const projectStore = useProjectStore()
-const currentProejct = computed(() => projectStore.project)
-
-
+// global project and possible taskStatuses
 const project = reactive({});
 const tasksStatuses = ["To Do", "In Progress", "Review", "Done"];
-// const tasksStatuses = ["To Do", "In Progress"];
-// defined on both - parent & child!
+
+// Filters - KanbanPageHeader /////////////////////////////////////////////////////
+// Variables defined on both ends - parent & child!
+// Emits changes are passed to below variables by update event.
 let selectedParticipants = ref([]);
 let dateRange = ref();
 let searchQuery = ref("");
 
-function filterTasks(status = false) {
+function filterTasks(status=false) {
+  // This function filters tasks in all columns based on the values of above variables.
+  // Moving this logic to the KanbanColumn would make it necessary to define above
+  // variables in the third place. Also it would create considerations on where to 
+  // put checkIfTaskIsNotFilteredOut()
   return project.tasks.filter((task) => {
+    // date range filter
     const isWithinDateRange =
       !dateRange.value ||
       (new Date(task.dueDate) >= dateRange.value[0].setHours(0, 0, 0, 0) &&
        new Date(task.dueDate) <= dateRange.value[1].setHours(0, 0, 0, 0));
+    // participants filter
     const isParticipantSelected =
       selectedParticipants.value.length === 0 ||
       selectedParticipants.value.some(
         (participant) => participant.id === task.owner
       );
+    // search field filter
     const isMatchingSearch =
       task.summary.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       task.title.toLowerCase().includes(searchQuery.value.toLowerCase());
+    // check status if provided
+    const isMatchingStatus = status ? task.status === status : true;
 
-    if (status) {
-      return (
-        isWithinDateRange &&
-        isParticipantSelected &&
-        isMatchingSearch &&
-        task.status === status
-      );
-    } else {
-      return isWithinDateRange && isParticipantSelected && isMatchingSearch;
-    }
+    return (
+      isWithinDateRange &&
+      isParticipantSelected &&
+      isMatchingSearch &&
+      isMatchingStatus
+    );
   });
 }
 
+function checkIfTaskIsNotFilteredOut(taskId) {
+  // This function checks if task is not filtered out by filterTasks().
+  // It it used before rendering a KanbanTask.
+  const unfliteredTasks = filterTasks();
+  const unfliteredTasksIds = unfliteredTasks.map(object => object.id);
+  return unfliteredTasksIds.includes(taskId)
+}
+//////////////////////////////////////////////////////////////////////////////////
+
+// TASK STATUS CHANGES HERE //////////////////////////////////////////////////////
+// v-model need reactive arrays, and I encountered issues when using reactive.
 let toDoTasks = ref([]);
 let inProgressTasks = ref([]);
 let reviewTasks = ref([]);
 let doneTasks = ref([]);
-
+// object created so we can iterate over it on render
 let allTasks = reactive({
   'To Do': toDoTasks,
   'In Progress': inProgressTasks,
@@ -67,76 +81,28 @@ let allTasks = reactive({
   'Done': doneTasks
 })
 
-
-
-watch(toDoTasks, () => {
-  const columnStatus = 'To Do';
-  let newTask = toDoTasks.value.filter((task) => task.status !== columnStatus);
-  console.log('new task is ', newTask)
-  if (newTask.length) {
-    let taskToUpdate = newTask[0]
-    console.log('Send post request here...')
-    taskToUpdate.status = columnStatus;
-    console.log(taskToUpdate)
-  }
-  console.log(project.tasks)
-
-}, { immediate: true });
-
-
-watch(inProgressTasks, () => {
-  const columnStatus = 'In Progress';
-  let newTask = inProgressTasks.value.filter((task) => task.status !== columnStatus);
-  console.log('new task is ', newTask)
-  if (newTask.length) {
-    let taskToUpdate = newTask[0]
-    console.log('Send post request here...')
-    taskToUpdate.status = columnStatus;
-    console.log(taskToUpdate)
-  }
-  console.log(project.tasks)
-
-}, { immediate: true });
-
-watch(reviewTasks, () => {
-  const columnStatus = 'Review';
-  let newTask = reviewTasks.value.filter((task) => task.status !== columnStatus);
-  console.log('new task is ', newTask)
-  if (newTask.length) {
-    let taskToUpdate = newTask[0]
-    console.log('Send post request here...')
-    taskToUpdate.status = columnStatus;
-    console.log(taskToUpdate)
-  }
-  console.log(project.tasks)
-
-}, { immediate: true });
-
-watch(doneTasks, () => {
-  const columnStatus = 'Done';
-  let newTask = doneTasks.value.filter((task) => task.status !== columnStatus);
-  console.log('new task is ', newTask)
-  if (newTask.length) {
-    let taskToUpdate = newTask[0]
-    console.log('Send post request here...')
-    taskToUpdate.status = columnStatus;
-    console.log(taskToUpdate)
-  }
-  console.log(project.tasks)
-
-}, { immediate: true });
-
-function filterTasksByStatus(tasksStatus) {
-  return filterTasks(tasksStatus);
+async function watchColumnStatusChanges(columnRef, columnStatus) {
+  // This function is called in watchers. It's purpose is to verify which
+  // task was changed, set new status and send a POST request to the back-end.
+  // This could eventually be moved to the KanbanColumn.
+  watch(columnRef, () => {
+    let newTask = columnRef.value.filter((task) => task.status !== columnStatus);
+    if (newTask.length) {
+      let taskToUpdate = newTask[0]
+      console.log('Send post request here... (below task to update)')
+      console.log(taskToUpdate)
+      taskToUpdate.status = columnStatus;
+    }  
+  }, { immediate: true })
 }
+// setting up watchers
+watchColumnStatusChanges(toDoTasks, 'To Do');
+watchColumnStatusChanges(inProgressTasks, 'In Progress');
+watchColumnStatusChanges(reviewTasks, 'Review');
+watchColumnStatusChanges(doneTasks, 'Done');
+//////////////////////////////////////////////////////////////////////////////////
 
-function checkIfTaskIsNotFilteredOut(taskId) {
-  const unfliteredTasks = filterTasks();
-  const unfliteredTasksIds = unfliteredTasks.map(object => object.id);
-  return unfliteredTasksIds.includes(taskId)
-}
-
-// FETCH THE DATA AND MOUNT HERE
+// FETCH THE DATA AND MOUNT HERE ////////////////////////////////////////////////
 const fetchProject = () => {
   // Simulate an asynchronous API request with a delay
   setTimeout(() => {
@@ -152,14 +118,14 @@ const fetchProject = () => {
     inProgressTasks.value = project.tasks.filter(task => task.status === 'In Progress');
     reviewTasks.value = project.tasks.filter(task => task.status === 'Review');
     doneTasks.value = project.tasks.filter(task => task.status === 'Done');
+    
   }, 500);
 };
 
 onMounted(() => {
-  projectStore.fetchProject(props.id);
-  console.log(projectStore.project)
   fetchProject();
 });
+//////////////////////////////////////////////////////////////////////////////////
 </script>
 
 
@@ -167,6 +133,8 @@ onMounted(() => {
   <div class="main-wrapper">
     <KanbanPageHeader
       :project="project"
+      :projectName="project.name"
+      :projectParticipants="project.participants"
       @update:selectedParticipants="selectedParticipants = $event"
       @update:dateRange="dateRange = $event"
       @update:searchQuery="searchQuery = $event"
@@ -180,8 +148,7 @@ onMounted(() => {
           v-for="status in tasksStatuses"
           :key="status"
           :status="status"
-          :tasks="filterTasksByStatus(status)"
-          :tasksCount="filterTasksByStatus(status).length"
+          :tasksCount="filterTasks(status).length"
         >      
         <draggable
         class="drag-into"

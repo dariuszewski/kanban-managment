@@ -5,7 +5,8 @@ import "@vuepic/vue-datepicker/dist/main.css";
 
 // This values will be passed on render by a parent component.
 const props = defineProps({
-  project: Object,
+  projectName: String,
+  projectParticipants: Array
 });
 
 // set variables for filters.
@@ -38,7 +39,7 @@ watch(searchQuery, (newValue) => {
     <v-row no-gutters>
       <v-col cols="12" md="3" sm="12" xs="12">
         <v-sheet class="pa-2 title">
-          {{ props.project.name }}
+          {{ props.projectName }}
         </v-sheet>
       </v-col>
 
@@ -57,7 +58,7 @@ watch(searchQuery, (newValue) => {
         <v-sheet class="pa-2">
           <div>
             <v-select
-              :items="project.participants"
+              :items="props.projectParticipants"
               item-title="fullName"
               item-value="id"
               v-model="selectedParticipants"
