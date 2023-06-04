@@ -1,9 +1,17 @@
 <script setup>
+import { ref } from 'vue';
+import TaskEditForm from '../forms/TaskEditForm.vue'
+
 import usersMock from "@/usersMock.js";
+
 
 const props = defineProps({
   task: Object,
 });
+
+const emit = defineEmits(["taskEdited"])
+
+const showTaskEditForm = ref(false);
 
 function _getTaskOwner(taskOwnerId) {
   return usersMock.filter((user) => user.id === taskOwnerId).pop();
@@ -15,16 +23,31 @@ function getNameAndLastName(taskOwnerId) {
 }
 
 function getInitials(taskOwnerId) {
-  const owner = _getTaskOwner(taskOwnerId);
+  const owner = _getTaskOwner(taskOwnerId); 
   return owner.firstName[0] + owner.lastName[0];
 }
+
+function handleTaskEdited() {
+  emit('taskEdited')
+}
+
+const toggleTaskEditForm = () => {
+  showTaskEditForm.value = !showTaskEditForm.value;
+};
+
 </script>
 
 <template>
   <div class="task">
     <v-card class="task-card">
       <div class="task-header">
-        <span class="task-title">{{ task.title }}</span>
+        <span class="task-title" @click="toggleTaskEditForm">{{ task.title }}</span>
+          <TaskEditForm 
+            :task="task"
+            :isOpen="showTaskEditForm" 
+            @closeForm="toggleTaskEditForm"
+            @taskEdited="handleTaskEdited"
+          />
         <span class="task-due-date">{{ task.dueDate }}</span>
       </div>
       <div class="task-summary">
@@ -64,6 +87,11 @@ function getInitials(taskOwnerId) {
   top: 0;
   left: 0;
   flex-basis: 60%;
+}
+
+.task-title:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .task-due-date {
