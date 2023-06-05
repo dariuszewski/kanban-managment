@@ -87,7 +87,7 @@ function assignPiniaContentToTaskArrays() {
   toDoTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'To Do');
   inProgressTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'In Progress');
   reviewTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'Review');
-  doneTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'Done');
+  doneTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'Done'); 
 }
 let refreshTrigger = ref(0);
 function refreshColumnsContentsWithPiniaStore() {
@@ -162,6 +162,7 @@ onMounted(() => {
           :key="`${status}-${refreshTrigger}`"        
           :status="status"
           :tasksCount="filterTasks(status).length"
+          @taskEdited="refreshColumnsContentsWithPiniaStore"
         >      
         <draggable
         class="drag-into"
