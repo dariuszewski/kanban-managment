@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import projectsMock from "@/projectsMock.js";
+import usersMock from "@/usersMock.js"
 
 
 export const useProjectStore = defineStore("project", {
@@ -14,43 +15,36 @@ export const useProjectStore = defineStore("project", {
     currentProject: (state) => {
       return state.project;
     },
+    getProjectParticipantsArray: (state) => {
+      return usersMock.filter((user) => state.project.participants.includes(user.id));
+    },
+    projectTasks: (state) =>  {
+      return state.project.tasks;
+    }
   },
 
   actions: {
     async fetchProject(projectId) {
-      this.project = projectsMock.find((p) => p.id === Number(projectId));
+      const selectedProject = projectsMock.find((p) => p.id === Number(projectId));
+      this.project = selectedProject;
+      this.tasks = selectedProject.tasks;
     },
     selectProject(project) {
       this.project = project;
     },
     clearProject() {
-      this.project = null;
+      this.project = null; 
     },
-  },
+    async deleteTask(taskId) {
+      this.project.tasks = this.project.tasks.filter(task => task.id !== taskId)
+    },
+    async updateTask(taskId, data) {
+      this.project.tasks = this.project.tasks.filter(task => task.id !== taskId)
+      this.project.tasks.push(data) 
+    },
+    async insertTask(data) {
+      this.project.tasks.push(data) 
+    }
+  }, 
 });
 
-
-// export const useProjectStore = defineStore("project", {
-//   state: () => ({
-//     project: JSON.parse(localStorage.getItem('project')) || null
-//   }),
-
-//   getters: {
-//     isProjectSelected: (state) => {
-//       return state.project !== null;
-//     },
-//     currentProject: (state)  => {
-//         return state.project
-//     }
-//   },
-
-//   actions: {
-//     async fetchProject(projectId) {
-//       // Simulate fetching the project from the server
-//       // In a real implementation, you would fetch the project from an API endpoint
-//       const project = projectsMock.find((p) => p.id === projectId);
-//       localStorage.setItem('project', JSON.stringify(project));
-//       this.project = project;
-//     },
-//   },
-// });

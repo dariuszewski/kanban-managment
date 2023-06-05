@@ -14,7 +14,8 @@ const props = defineProps({
   id: String,
 });
 
-// global project and possible taskStatuses
+// global project instances and possible taskStatuses
+const projectStore = useProjectStore();
 const project = reactive({});
 const tasksStatuses = ["To Do", "In Progress", "Review", "Done"];
 
@@ -30,7 +31,8 @@ function filterTasks(status=false) {
   // Moving this logic to the KanbanColumn would make it necessary to define above
   // variables in the third place. Also it would create considerations on where to 
   // put checkIfTaskIsNotFilteredOut()
-  return project.tasks.filter((task) => {
+  // return project.tasks.filter((task) => {
+    return projectStore.currentProject.tasks.filter((task) => {
     // date range filter
     const isWithinDateRange =
       !dateRange.value ||
@@ -64,8 +66,8 @@ function checkIfTaskIsNotFilteredOut(taskId) {
   const unfliteredTasks = filterTasks();
   const unfliteredTasksIds = unfliteredTasks.map(object => object.id);
   return unfliteredTasksIds.includes(taskId)
+  return true
 }
-//////////////////////////////////////////////////////////////////////////////////
 
 // TASK STATUS CHANGES HERE //////////////////////////////////////////////////////
 // v-model need reactive arrays, and I encountered issues when using reactive.
@@ -80,6 +82,19 @@ let allTasks = reactive({
   'Review': reviewTasks,
   'Done': doneTasks
 })
+
+function assignPiniaContentToTaskArrays() {
+  toDoTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'To Do');
+  inProgressTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'In Progress');
+  reviewTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'Review');
+  doneTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'Done'); 
+}
+let refreshTrigger = ref(0);
+function refreshColumnsContentsWithPiniaStore() {
+  // This is very important function! It forces the KanbanColumn component to refresh.
+  assignPiniaContentToTaskArrays()
+  refreshTrigger.value += 1;
+}
 
 async function watchColumnStatusChanges(columnRef, columnStatus) {
   // This function is called in watchers. It's purpose is to verify which
@@ -100,32 +115,30 @@ watchColumnStatusChanges(toDoTasks, 'To Do');
 watchColumnStatusChanges(inProgressTasks, 'In Progress');
 watchColumnStatusChanges(reviewTasks, 'Review');
 watchColumnStatusChanges(doneTasks, 'Done');
-//////////////////////////////////////////////////////////////////////////////////
 
 // FETCH THE DATA AND MOUNT HERE ////////////////////////////////////////////////
 const fetchProject = () => {
   // Simulate an asynchronous API request with a delay
+  // GET request here
+  // The plan is to GET a project, assign it to Pinia store so it is accessible across =
+  // all components which would need it and also create a separate instance for filtartion.
   setTimeout(() => {
-    const p = projectsMock.find((p) => p.id === Number(props.id));
+    projectStore.fetchProject(props.id)
     
+    const p = projectsMock.find((p) => p.id === Number(props.id));
     project.id = p.id;
     project.name = p.name;
     project.tasks = p.tasks;
-    project.participants = usersMock.filter((user) =>
-      p.participants.includes(user.id)
-    );
-    toDoTasks.value = project.tasks.filter(task => task.status === 'To Do');
-    inProgressTasks.value = project.tasks.filter(task => task.status === 'In Progress');
-    reviewTasks.value = project.tasks.filter(task => task.status === 'Review');
-    doneTasks.value = project.tasks.filter(task => task.status === 'Done');
-    
+    project.participants = projectStore.getProjectParticipantsArray
+
+    assignPiniaContentToTaskArrays()
+
   }, 500);
 };
 
 onMounted(() => {
   fetchProject();
 });
-//////////////////////////////////////////////////////////////////////////////////
 </script>
 
 
@@ -138,7 +151,7 @@ onMounted(() => {
       @update:selectedParticipants="selectedParticipants = $event"
       @update:dateRange="dateRange = $event"
       @update:searchQuery="searchQuery = $event"
-    />
+    /> 
 
     <v-divider :thickness="2"></v-divider>
 
@@ -146,9 +159,10 @@ onMounted(() => {
       <v-row no-gutters>
         <KanbanColumn
           v-for="status in tasksStatuses"
-          :key="status"
+          :key="`${status}-${refreshTrigger}`"        
           :status="status"
           :tasksCount="filterTasks(status).length"
+          @taskEdited="refreshColumnsContentsWithPiniaStore"
         >      
         <draggable
         class="drag-into"
@@ -158,6 +172,7 @@ onMounted(() => {
           <KanbanTask
             v-if="checkIfTaskIsNotFilteredOut(item.id)"
             :task="item"
+            @taskEdited="refreshColumnsContentsWithPiniaStore"
           />
           </template>
         </draggable>
@@ -179,4 +194,4 @@ onMounted(() => {
   min-height: 100px;
 }
 
-</style>
+</style> 

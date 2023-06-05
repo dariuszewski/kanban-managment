@@ -1,9 +1,23 @@
 <script setup>
+import { ref } from 'vue'
+import TaskEditForm from '../forms/TaskEditForm.vue'
 
 const props = defineProps({
   status: String,
   tasksCount: Number,
 });
+
+const showTaskEditForm= ref(false);
+const emit = defineEmits(["taskEdited"])
+
+function toggleTaskEditForm() {
+  showTaskEditForm.value = !showTaskEditForm.value;
+  console.log('hello world - ', showTaskEditForm.value)
+}
+
+function handleTaskEdited() {
+  emit('taskEdited')
+}
 
 </script>
 
@@ -23,8 +37,16 @@ const props = defineProps({
             density="compact"
             class="add-task-btn"
             text="ADD ITEM"
+            @click="toggleTaskEditForm"
           >
           </v-btn>
+          <TaskEditForm 
+            :isOpen="showTaskEditForm" 
+            :formType="'Create'"
+            :defaultStatus="props.status"
+            @closeForm="toggleTaskEditForm"
+            @taskEdited="handleTaskEdited"
+          />
         </div>
         <div class="tasks-wrapper">
           <!-- Tasks go here -->
