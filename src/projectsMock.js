@@ -30,7 +30,7 @@ const projectsMock = [
           summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nisl eu massa fringilla egestas vitae euismod erat. Aliquam quis. ',
           dueDate: '2023-06-05',
           createdDate: '2023-05-29', 
-          status: 'To Do'        
+          status: 'Done'        
         },
         {
           owner: 1,
@@ -47,19 +47,49 @@ const projectsMock = [
       id: 2,
       name: 'Summer Sales Global',
       participants: [2],
-      tasks: []
+      tasks: [
+        {
+          owner: 1,
+          id: 4,
+          title: 'DQ tests for May Sales Report',
+          summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nisl eu massa fringilla egestas vitae euismod erat. Aliquam quis. ',
+          dueDate: '2023-06-05',
+          createdDate: '2023-05-29',
+          status: 'Done'
+        }
+      ]
     },
     {
       id: 3,
       name: 'Acron Branch Liquidation',
       participants: [1, 2],
-      tasks: []
+      tasks: [
+        {
+          owner: 1,
+          id: 4,
+          title: 'DQ tests for May Sales Report',
+          summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nisl eu massa fringilla egestas vitae euismod erat. Aliquam quis. ',
+          dueDate: '2023-06-05',
+          createdDate: '2023-05-29',
+          status: 'Review'
+        }
+      ]
     },
     {
       id: 4,
       name: 'Dunder Mifflin Infinity Dev',
       participants: [1, 2],
-      tasks: []
+      tasks: [
+        {
+          owner: 1,
+          id: 4,
+          title: 'DQ tests for May Sales Report',
+          summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in nisl eu massa fringilla egestas vitae euismod erat. Aliquam quis. ',
+          dueDate: '2023-06-05',
+          createdDate: '2023-05-29',
+          status: 'Review'
+        }
+      ]
     },
 ]
   

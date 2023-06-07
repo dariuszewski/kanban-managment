@@ -9,12 +9,14 @@ import projectsMock from "@/projectsMock.js"
 const pinia = createPinia() 
 const userStore = useUserStore(pinia) // currently its used only to show user, but will be needed to load projects (probably)
 
-const projects = reactive(projectsMock)
-const done = ref(8)
-const all = ref(10)
-
-
 const user = computed(() => userStore.user)
+const projects = reactive(getAvailableProjects())
+
+function getAvailableProjects() {
+  const availableProjects = projectsMock.filter(p => p.participants.includes(user.value.id))
+  return availableProjects
+}
+
 </script>
 
 <template>
@@ -41,9 +43,7 @@ const user = computed(() => userStore.user)
           class="mb-2"
         >
           <project-card
-            :id="project.id"
-            :name="project.name"
-            :progress="(done/all)*100"
+            :project="project"
           />
         </v-col>
       </template>

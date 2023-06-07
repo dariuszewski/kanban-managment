@@ -71,6 +71,7 @@ function checkIfTaskIsNotFilteredOut(taskId) {
 
 // TASK STATUS CHANGES HERE //////////////////////////////////////////////////////
 // v-model need reactive arrays, and I encountered issues when using reactive.
+// change to const??
 let toDoTasks = ref([]);
 let inProgressTasks = ref([]);
 let reviewTasks = ref([]);
@@ -123,6 +124,7 @@ const fetchProject = () => {
   // The plan is to GET a project, assign it to Pinia store so it is accessible across =
   // all components which would need it and also create a separate instance for filtartion.
   setTimeout(() => {
+    // add ref loaded flag as false at the begenning and true at the end to wait for a data
     projectStore.fetchProject(props.id)
     
     const p = projectsMock.find((p) => p.id === Number(props.id));
@@ -157,6 +159,7 @@ onMounted(() => {
 
     <div class="columns" v-if="project.tasks">
       <v-row no-gutters>
+      <!-- may be solved by a watcher and v-if="renderColumn" set to true/false? -->
         <KanbanColumn
           v-for="status in tasksStatuses"
           :key="`${status}-${refreshTrigger}`"        
