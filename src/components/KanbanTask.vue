@@ -45,6 +45,7 @@ const toggleTaskEditForm = () => {
           <TaskEditForm 
             :task="task"
             :isOpen="showTaskEditForm" 
+            :formType="'Edit'"
             @closeForm="toggleTaskEditForm"
             @taskEdited="handleTaskEdited"
           />
