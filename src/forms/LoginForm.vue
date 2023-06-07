@@ -1,12 +1,9 @@
 <script setup>
   import { ref, reactive, computed, watch } from 'vue'
-  import { useUserStore } from "@/stores/user"
-  import router from '../router'
+import { useAuthStore } from '../stores/useAuthStore';
+import TheWelcome from '../components/TheWelcome.vue';
 
-  const userStore = useUserStore()
-  const isLoggedIn = computed(() => userStore.isLoggedIn)
-  const user = computed(() => userStore.user)
-
+  const authStore = useAuthStore()
   // form validation
   const rules = {
     email: [
@@ -29,17 +26,14 @@
   const login = async () => {
     loginForm.error = false
     if (loginForm.formValid) {
-      try {
-        const response = await userStore.signIn(loginForm.email, loginForm.password); // this will define global user
-        if (user.value) {
-          router.push('/');
-        } else {
-          loginForm.error = 'Email or password is incorrect.';
-          console.log(loginForm.error);
-        }
-      } catch (error) {
-        console.log(error)
-      }
+        authStore.login(loginForm.email, loginForm.password).
+            then(res => console.log(res)).
+            catch(err => {
+              console.log(err)
+              loginForm.error = err
+              console.log(err)
+            }
+          )
     }
   }
 

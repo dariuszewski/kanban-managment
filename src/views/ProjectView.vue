@@ -146,41 +146,43 @@ onMounted(() => {
   <div class="main-wrapper">
     <KanbanPageHeader
       :project="project"
-      :projectName="project.name"
-      :projectParticipants="project.participants"
+      :project-name="project.name"
+      :project-participants="project.participants"
       @update:selectedParticipants="selectedParticipants = $event"
       @update:dateRange="dateRange = $event"
       @update:searchQuery="searchQuery = $event"
     /> 
 
-    <v-divider :thickness="2"></v-divider>
+    <v-divider :thickness="2" />
 
-    <div class="columns" v-if="project.tasks">
+    <div
+      v-if="project.tasks"
+      class="columns"
+    >
       <v-row no-gutters>
         <KanbanColumn
           v-for="status in tasksStatuses"
           :key="`${status}-${refreshTrigger}`"        
           :status="status"
-          :tasksCount="filterTasks(status).length"
+          :tasks-count="filterTasks(status).length"
           @taskEdited="refreshColumnsContentsWithPiniaStore"
         >      
-        <draggable
-        class="drag-into"
-         v-model="allTasks[status]"
-        >
-        <template #item="{ item }">
-          <KanbanTask
-            v-if="checkIfTaskIsNotFilteredOut(item.id)"
-            :task="item"
-            @taskEdited="refreshColumnsContentsWithPiniaStore"
-          />
-          </template>
-        </draggable>
+          <draggable
+            v-model="allTasks[status]"
+            class="drag-into"
+          >
+            <template #item="{ item }">
+              <KanbanTask
+                v-if="checkIfTaskIsNotFilteredOut(item.id)"
+                :task="item"
+                @taskEdited="refreshColumnsContentsWithPiniaStore"
+              />
+            </template>
+          </draggable>
         </KanbanColumn>
       </v-row>
     </div>
   </div>
-
 </template>
 
 <style scoped>

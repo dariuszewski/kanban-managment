@@ -12,11 +12,11 @@ const route = useRoute()
       class="navbar"
     />
     <v-main>
-        <div class="main">
-          <v-app>
-            <RouterView />
-          </v-app>
-        </div>
+      <div class="main">
+        <v-app>
+          <RouterView />
+        </v-app>
+      </div>
     </v-main>
   </v-layout>
 </template>

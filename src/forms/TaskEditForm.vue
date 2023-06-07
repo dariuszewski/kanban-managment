@@ -108,9 +108,9 @@ watch(
 <template>
   <v-dialog
     v-model="isOpen"
-    @click:outside="closeForm"
     max-width="728"
     scrollable
+    @click:outside="closeForm"
   >
     <v-card>
       <div class="form-header">
@@ -122,21 +122,20 @@ watch(
           icon="mdi-close"
           class="close-button"
           @click="closeForm"
-        >
-        </v-btn>
+        />
       </div>
 
       <v-form class="taskEditForm">
         <v-row>
           <v-col sm="12">
             <v-text-field 
-              label="Task Title" 
+              v-model="taskTitle" 
+              label="Task Title"
               variant="underlined"
               density="compact"
               prepend-inner-icon="mdi-pencil"
               hide-details
-              v-model="taskTitle"
-            ></v-text-field>   
+            />   
           </v-col>
         </v-row>
         <v-row>
@@ -155,10 +154,10 @@ watch(
         <v-row>
           <v-col xs="12">
             <v-select
+              v-model="currentOwner"
               :items="projectStore.getProjectParticipantsArray"
               item-title="fullName"
               item-value="id"
-              v-model="currentOwner"
               label="Assignee"
               variant="underlined"
               prepend-inner-icon="mdi-account-search"
@@ -166,22 +165,26 @@ watch(
               return-object
               chips
               hide-details
-            ></v-select>
+            />
           </v-col>
         </v-row>
         <v-row>
           <v-col xs="12">
             <v-textarea
+              v-model="description"
               label="Description"
               variant="underlined"
               prepend-inner-icon="mdi-pencil"
-              v-model="description"
-            ></v-textarea>
+            />
           </v-col>
         </v-row>
         <div class="buttons">
           <v-row>
-            <v-col cols="12" md="4" xs="12">
+            <v-col
+              cols="12"
+              md="4"
+              xs="12"
+            >
               <v-btn
                 v-if="formType === 'Edit'"
                 class="custom-button delete-btn"
@@ -199,24 +202,44 @@ watch(
               >
                 Cancel
               </v-btn>
-                <v-dialog v-model="confirmDialog" max-width="300">
-                  <v-card>
-                    <v-card-title class="headline">Confirm Deletion</v-card-title>
-                    <v-card-text>
-                      Are you sure you want to delete this item?
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-btn text @click="cancelDelete">Cancel</v-btn>
-                      <v-btn color="red" text @click="deleteItem">Delete</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+              <v-dialog
+                v-model="confirmDialog"
+                max-width="300"
+              >
+                <v-card>
+                  <v-card-title class="headline">
+                    Confirm Deletion
+                  </v-card-title>
+                  <v-card-text>
+                    Are you sure you want to delete this item?
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn
+                      text
+                      @click="cancelDelete"
+                    >
+                      Cancel
+                    </v-btn>
+                    <v-btn
+                      color="red"
+                      text
+                      @click="deleteItem"
+                    >
+                      Delete
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </v-col>
 
-            <v-col cols="12" md="4" xs="12">
+            <v-col
+              cols="12"
+              md="4"
+              xs="12"
+            >
               <div class="text-center">
                 <v-menu>
-                  <template v-slot:activator="{ props }">
+                  <template #activator="{ props }">
                     <v-btn
                       class="custom-button"
                       prepend-icon="mdi-chevron-down"
@@ -231,16 +254,21 @@ watch(
                       :key="index"
                     >
                       <v-list-item-title
-                        @click="selectedStatus = item"
                         class="custom-list-item"
-                        >{{ item }}</v-list-item-title
+                        @click="selectedStatus = item"
                       >
+                        {{ item }}
+                      </v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
               </div>
             </v-col>
-            <v-col cols="12" md="4" xs="12">
+            <v-col
+              cols="12"
+              md="4"
+              xs="12"
+            >
               <v-btn
                 class="custom-button"
                 prepend-icon="mdi-floppy"

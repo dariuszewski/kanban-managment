@@ -22,14 +22,18 @@ function handleTaskEdited() {
 </script>
 
 <template>
-  <v-col cols="12" sm="3" xs="12">
+  <v-col
+    cols="12"
+    sm="3"
+    xs="12"
+  >
     <v-sheet class="pa-2">
       <v-card class="single-column">
         <v-card-title class="title">
           {{ props.status }}
           <span class="tasks-count">{{ props.tasksCount }}</span>
         </v-card-title>
-        <v-divider :thickness="2"></v-divider>
+        <v-divider :thickness="2" />
         <div class="center-container">
           <v-btn
             variant="outlined"
@@ -38,19 +42,18 @@ function handleTaskEdited() {
             class="add-task-btn"
             text="ADD ITEM"
             @click="toggleTaskEditForm"
-          >
-          </v-btn>
+          />
           <TaskEditForm 
-            :isOpen="showTaskEditForm" 
-            :formType="'Create'"
-            :defaultStatus="props.status"
+            :is-open="showTaskEditForm" 
+            :form-type="'Create'"
+            :default-status="props.status"
             @closeForm="toggleTaskEditForm"
             @taskEdited="handleTaskEdited"
           />
         </div>
         <div class="tasks-wrapper">
           <!-- Tasks go here -->
-          <slot></slot>
+          <slot />
         </div>
       </v-card>
     </v-sheet>
