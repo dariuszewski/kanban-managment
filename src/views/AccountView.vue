@@ -96,7 +96,7 @@
 <script setup>
   import { onMounted, reactive, ref } from 'vue'
   import { db } from '../components/firebase/config'
-  import {collection, updateDoc, getDoc, doc} from "firebase/firestore"
+  import { updateDoc, getDoc, doc} from "firebase/firestore"
   import { useAuthStore } from '../stores/useAuthStore';
   const showColorPicker = ref(false)
   const form = reactive({
