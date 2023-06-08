@@ -2,7 +2,7 @@
 import { defineProps, defineEmits, ref, reactive, watch, computed, nextTick, onBeforeMount } from "vue";
 import { useProjectStore } from "@/stores/project";
 import projectsMock from '@/projectsMock.js'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, addDoc } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
 
 const props = defineProps({
@@ -14,9 +14,14 @@ const usersSelectList = ref([])
 
 onBeforeMount(async () => {
   const response = await getDocs(collection(db, 'users'))
-  usersSelectList.value = response.docs.map(d => {
-    const data = d.data()
-    return { fullName: data.firstName + " " + data.lastName }
+  usersSelectList.value = response.docs.map(ref => {
+    const data = ref.data()
+    return {
+      id: ref.id,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      fullName: data.firstName + " " + data.lastName,
+    }
   })
 })
 
@@ -44,10 +49,9 @@ async function saveChanges() {
   // WHOLE THING CAN ACTUALLY BE MADE MORE SIMILAR TO THE LOGIN FORM
 
   const projectDetails = {
-    id: 123,
     owner: 1,  //currentOwner.value.id,
     name: projectTitle.value,
-    participants: participants.value.map((el) => el.id),
+    participants: participants.value.map(el => el.id),
     tasks: [],
   }
 
@@ -56,6 +60,10 @@ async function saveChanges() {
   // POST REQUEST HERE
   // projectStore.insertProject(projectDetails)
   // projectsMock.push(projectDetails)
+
+  const docRef = await addDoc(collection(db, "projects"), projectDetails);
+  console.log("Document written with ID: ", docRef.id);
+
   closeForm()
   emit("projectCreated", projectDetails);
 }
