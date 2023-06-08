@@ -1,13 +1,42 @@
 <template>
-    <v-btn id="card" class="d-flex align-center justify-center flex-column" stacked>
-        <v-icon id="icon">mdi-plus</v-icon>
-        <div id="title">Add new</div>
-        <div id="subtitle">Create new project</div>
-    </v-btn>
+  <v-btn 
+    id="card" 
+    class="d-flex align-center justify-center flex-column" 
+    stacked
+    @click="toggleNewProjectForm"
+  >
+    <v-icon id="icon">
+      mdi-plus
+    </v-icon>
+    <div id="title">
+      Add new
+    </div>
+    <div id="subtitle">
+      Create new project
+    </div>
+  </v-btn>
+  <NewProjectForm 
+    :is-open="showNewProjectForm"
+    @close-form="toggleNewProjectForm"
+    @project-created="projectCreatedHandler"
+  />
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
+import NewProjectForm from '../forms/NewProjectForm.vue'
+
+const emit = defineEmits(["projectCreated"]);
+
+const showNewProjectForm= ref(false);
+function toggleNewProjectForm() {
+    showNewProjectForm.value = !showNewProjectForm.value;
+}
+
+function projectCreatedHandler(data) {
+    console.log('proj created', data);
+    emit("projectCreated", data)
+}
 </script>
 
 <style scoped>

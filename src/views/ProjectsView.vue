@@ -19,17 +19,32 @@ function getAvailableProjects() {
   return availableProjects
 }
 
+function projectCreatedHandler(data) {
+  console.log('project created handler', data)
+  projects.push
+}
+
 </script>
 
 <template>
   <div class="main-wrapper">
     <!-- <v-container> -->
     <!-- header -->
-    <v-row class="mt-5" no-gutters>
-      <h1 id="title">Hello, {{ user.firstName }}</h1>
+    <v-row 
+      class="mt-5" 
+      no-gutters
+    >
+      <h1 id="title">
+        Hello, {{ user.firstName }}
+      </h1>
     </v-row>
-    <v-row class="mt-12 mb-12" no-gutters>
-      <h2 id="subtitle">Select a project...</h2>
+    <v-row 
+      class="mt-12 mb-12" 
+      no-gutters
+    >
+      <h2 id="subtitle">
+        Select a project...
+      </h2>
     </v-row>
     <!-- end of header -->
     <!-- projects section -->
@@ -54,7 +69,7 @@ function getAvailableProjects() {
         sm="4"
         md="3"
       >
-        <AddProjectCard></AddProjectCard>
+        <AddProjectCard @project-created="projectCreatedHandler" />
       </v-col>
     </v-row>
     <!-- end of projects section -->
