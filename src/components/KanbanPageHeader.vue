@@ -46,7 +46,12 @@ watch(searchQuery, (newValue) => {
         </v-sheet>
       </v-col>
 
-      <v-col cols="12" md="3" sm="4" xs="12">
+      <v-col
+        cols="12"
+        md="3"
+        sm="4"
+        xs="12"
+      >
         <v-sheet class="pa-2">
           <VueDatePicker
             v-model="dateRange"
@@ -57,14 +62,19 @@ watch(searchQuery, (newValue) => {
           />
         </v-sheet>
       </v-col>
-      <v-col cols="12" md="3" sm="4" xs="12">
+      <v-col
+        cols="12"
+        md="3"
+        sm="4"
+        xs="12"
+      >
         <v-sheet class="pa-2">
           <div>
             <v-select
+              v-model="selectedParticipants"
               :items="props.projectParticipants"
               item-title="fullName"
               item-value="id"
-              v-model="selectedParticipants"
               label="Participants"
               class="pl-3"
               variant="underlined"
@@ -73,22 +83,26 @@ watch(searchQuery, (newValue) => {
               multiple
               chips
               hide-details
-            >
-            </v-select>
+            />
           </div>
         </v-sheet>
       </v-col>
 
-      <v-col cols="12" md="3" sm="4" xs="12">
+      <v-col
+        cols="12"
+        md="3"
+        sm="4"
+        xs="12"
+      >
         <v-sheet class="pa-2">
           <v-text-field
+            v-model="searchQuery"
             label="Search"
             class="pl-3"
             prepend-inner-icon="mdi-magnify"
             variant="underlined"
-            v-model="searchQuery"
             hide-details
-          ></v-text-field>
+          />
         </v-sheet>
       </v-col>
     </v-row>

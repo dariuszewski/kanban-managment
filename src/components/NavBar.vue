@@ -8,15 +8,13 @@
     <v-list>
       <v-list-item
         prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-        :title="name + ' ' + surname"
-        :subtitle="user.email"
       />
     </v-list>
-
     <v-divider />
-
     <v-list
       nav
+      class="d-flex flex-column"
+      height="90vh"
     >
       <nav-bar-item
         path="projects"
@@ -28,30 +26,22 @@
         title="Account"
         icon="mdi-account"
       />
+      <v-list-item
+        title="Logout"
+        prepend-icon="mdi-logout"
+        class="mt-auto"
+        style="color: white;"
+        @click="logout"
+      />
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script setup>
-import { ref, computed, defineProps } from 'vue'
-import router from '../router'
-import { createPinia } from 'pinia'
-import { useUserStore } from "@/stores/user"
-import NavBar from '../components/NavBar.vue'
-import NavBarItem from './NavBarItem.vue';
-
-
-const pinia = createPinia()
-const userStore = useUserStore(pinia)
-
-const user = computed(() => userStore.user)
-const email = user.value.email || "dev.mail@example.com"
-const parts = email.split('@')[0].split('.')
-const name = parts[0].charAt(0).toUpperCase() + parts[0].substring(1).toLowerCase()
-const surname = parts[1].charAt(0).toUpperCase() + parts[1].substring(1).toLowerCase()
-
-console.log(user.value)
-
+  import { useAuthStore } from '../stores/useAuthStore';
+  import NavBarItem from './NavBarItem.vue';
+  const authStore = useAuthStore()
+  const logout = () => authStore.logout()
 </script>
 
 <style scoped>
@@ -61,5 +51,8 @@ console.log(user.value)
   a {
     color: black;
     text-decoration: none;
+  }
+  .v-list-item {
+    flex: 0;
   }
 </style>
