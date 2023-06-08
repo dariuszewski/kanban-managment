@@ -12,9 +12,9 @@ import AccountView from '../views/AccountView.vue'
 
 
 import projectsMock from "@/projectsMock.js"
+import { useAuthStore } from '../stores/useAuthStore'
 const pinia = createPinia()
 const userStore = useUserStore(pinia)
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,7 +22,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      meta: {requiresAuth: true}
     },
     {
       path: '/login',
@@ -32,18 +33,21 @@ const router = createRouter({
     {
       path: '/projects',
       name: 'projects',
-      component: ProjectsView
+      component: ProjectsView,
+      meta: {requiresAuth: true}
     },
     {
       path: '/account',
       name: 'account',
       component: AccountView,
+      meta: {requiresAuth: true}
     },
     {
       path: '/project/:id',
       name: 'project',
       props: true,
       component: ProjectView,
+      meta: {requiresAuth: true},
       beforeEnter: (to, from, next) => {
         // get current project
         const projectId = to.params.id
@@ -74,6 +78,16 @@ const router = createRouter({
       component: NotFoundView,
     },
   ]
+})
+
+router.beforeEach((to, from) => {
+  const authStore = useAuthStore(pinia)
+  if (to.meta && to.meta.requiresAuth && !authStore.isAuthenticated && !to.fullPath.includes('login')) {
+    console.log("redirecting unautheticated user")
+    return {
+      path: '/login',
+    }
+  }
 })
 
 export default router

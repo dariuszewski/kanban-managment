@@ -11,6 +11,7 @@
     "@mdi/font": "^7.2.96",
     "@vuepic/vue-datepicker": "^5.1.2",
     "@vueuse/core": "^10.1.2",
+    "firebase": "^9.22.1",
     "pinia": "^2.0.35",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",

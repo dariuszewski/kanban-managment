@@ -38,19 +38,18 @@ function handleTaskEdited() {
             class="add-task-btn rounded-lg"
             text="ADD ITEM"
             @click="toggleTaskEditForm"
-          >
-          </v-btn>
+          />
           <TaskEditForm 
-            :isOpen="showTaskEditForm" 
-            :formType="'Create'"
-            :defaultStatus="props.status"
+            :is-open="showTaskEditForm" 
+            :form-type="'Create'"
+            :default-status="props.status"
             @closeForm="toggleTaskEditForm"
             @taskEdited="handleTaskEdited"
           />
         </div>
         <div class="tasks-wrapper">
           <!-- Tasks go here -->
-          <slot></slot>
+          <slot />
         </div>
       </v-card>
     </v-sheet>
