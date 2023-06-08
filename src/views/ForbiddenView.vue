@@ -1,19 +1,15 @@
 <template>
   <v-app>
     <v-main class="d-flex align-center justify-center">
-      <v-card color="#1E293C" dark class="pa-6" style="width: 800px; max-width: 90vw;">
+      <v-card color="#1E293C" dark class="pa-6 text-center" style="width: 800px; max-width: 90vw;">
         <v-card-text>
-          <v-row justify="space-between" class="mb-10">
-            <v-col cols="5" class="d-flex align-center justify-center">
-              <v-img :src="logo" style="width: 300px;"></v-img>
-            </v-col>
-            <v-col cols="5" class="text-center">
-              <h1 class="display-2 mt-10" style="color: white; font-size: 5rem;">403</h1>
-              <h3 class="headline mt-5" style="color: white;">Forbidden</h3>
-              <p class="body-2 mt-5" style="color: white;">We're sorry, but you do not have access to this page.</p>
-              <v-btn color="white" class="mt-5 rounded-pill elevation-3" router to="/login">Home</v-btn>
-            </v-col>
+          <v-row justify="center" class="mb-10">
+            <v-img :src="logo" aspect-ratio="1.7"></v-img>
           </v-row>
+          <h1 class="display-2 mt-10" style="color: white; font-size: 5rem;">403</h1>
+          <h3 class="headline mt-5" style="color: white;">Forbidden</h3>
+          <p class="body-2 mt-5" style="color: white;">We're sorry, but you do not have access to this page.</p>
+          <v-btn color="white" class="mt-5 rounded-pill elevation-3" router to="/login">Home</v-btn>
         </v-card-text>
       </v-card>
     </v-main>
@@ -25,7 +21,7 @@ export default {
   name: 'ForbiddenView',
   data() {
     return {
-      logo: 'dunder.png' // Make sure the path to the logo is correct
+      logo: 'dunder.png'
     }
   }
 }
