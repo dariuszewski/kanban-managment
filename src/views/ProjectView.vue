@@ -162,7 +162,7 @@ onMounted(() => {
       class="columns"
     >
       <v-row no-gutters>
-      <!-- may be solved by a watcher and v-if="renderColumn" set to true/false? -->
+        <!-- may be solved by a watcher and v-if="renderColumn" set to true/false? -->
         <KanbanColumn
           v-for="status in tasksStatuses"
           :key="`${status}-${refreshTrigger}`"        

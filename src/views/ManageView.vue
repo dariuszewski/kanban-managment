@@ -20,7 +20,7 @@ let nonParticipatingUsers = ref([])
 const searchQuery = ref('')
 
 function getProjectOwner() {
-    const ownerId = project.owner;
+    const ownerId = project.value.owner;
     const ownerData = usersMock.find((user) => user.id === ownerId);
     return ownerData
 }
@@ -65,9 +65,9 @@ const fetchProject = () => {
     // add ref loaded flag as false at the begenning and true at the end to wait for a data
     projectStore.fetchProject(props.id)
     
-    project = projectStore.currentProject
+    project.value = projectStore.currentProject
 
-    projectOwner = usersMock.find((user) => user.id === project.owner);
+    projectOwner = usersMock.find((user) => user.id === project.value.owner);
     projectParticipants.value = projectStore.getProjectParticipantsArray.filter((user) => user.id !== projectOwner.id)
     nonParticipatingUsers.value = usersMock.filter((user) => !projectStore.getProjectParticipantsArray.includes(user))
     // console.log(projectParticipants)
@@ -82,75 +82,109 @@ onMounted(() => {
 
 
 <template>
-  
-    <div class="main" v-if="projectStore.isProjectSelected">
-      <v-row no-gutters>
-        <v-col cols="12" xs="12">
-          <v-sheet class="pa-2 title">
-            {{ project.name }} Project Settings >>>
-          </v-sheet>
-        </v-col>
-      </v-row>
-    <v-row>
-        <v-col cols="12" sm="6" xs="12">
-            <v-card class="single-card" v-if="project">
-                <v-card-title class="small-title">
-                    Participants
-                </v-card-title>
-
-                <div class="list-row" v-if="projectParticipants">
-                    <span class="form-title">
-                        {{ getProjectOwner().fullName }}
-                    </span>
-                    <v-btn
-                        variant="plain"
-                        icon="mdi-close"
-                        class="close-button"
-                        color="primary"
-                        >
-                    OWNER
-                    </v-btn>
-                </div>
-                <div class="list-row" v-for="participant in projectParticipants" :key="participant.id">
-                    <span class="form-title">
-                        {{ participant.fullName }}
-                    </span>
-                    <v-btn
-                        variant="plain"
-                        icon="mdi-close"
-                        class="close-button"
-                        color="warning"
-                        @click="() => removeParticipant(participant)"
-                    >
-                    Remove
-                    </v-btn>
-                </div>
-            </v-card>
-        </v-col>
-        <v-col cols="12" sm="6" xs="12">
-            <v-card class="single-card" v-if="project">
-    <v-card-title class="small-title">
-      Other Employees
-    </v-card-title>
-    <v-text-field v-model="searchQuery" label="Filter Employees" prepend-inner-icon="mdi-magnify"></v-text-field>
-    <div class="list-row" v-for="participant in filteredNonParticipatingUsers" :key="participant.id">
-      <span class="form-title">
-        {{ participant.fullName }}
-      </span>
-      <v-btn
-        variant="plain"
-        icon="mdi-close"
-        class="close-button"
-        color="success"
-        @click="() => addParticipant(participant)"
+  <div
+    v-if="projectStore.isProjectSelected"
+    class="main"
+  >
+    <v-row no-gutters>
+      <v-col
+        cols="12"
+        xs="12"
       >
-        ADD
-      </v-btn>
-    </div>
-  </v-card>
-        </v-col>
+        <v-sheet class="pa-2 title">
+          {{ project.name }} Project Settings >>>
+        </v-sheet>
+      </v-col>
     </v-row>
-    </div>
+    <v-row>
+      <v-col
+        cols="12"
+        sm="6"
+        xs="12"
+      >
+        <v-card
+          v-if="project"
+          class="single-card"
+        >
+          <v-card-title class="small-title">
+            Participants
+          </v-card-title>
+
+          <div
+            v-if="projectParticipants"
+            class="list-row"
+          >
+            <span class="form-title">
+              {{ getProjectOwner().fullName }}
+            </span>
+            <v-btn
+              variant="plain"
+              icon="mdi-close"
+              class="close-button"
+              color="primary"
+            >
+              OWNER
+            </v-btn>
+          </div>
+          <div
+            v-for="participant in projectParticipants"
+            :key="participant.id"
+            class="list-row"
+          >
+            <span class="form-title">
+              {{ participant.fullName }}
+            </span>
+            <v-btn
+              variant="plain"
+              icon="mdi-close"
+              class="close-button"
+              color="warning"
+              @click="() => removeParticipant(participant)"
+            >
+              Remove
+            </v-btn>
+          </div>
+        </v-card>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        xs="12"
+      >
+        <v-card
+          v-if="project"
+          class="single-card"
+        >
+          <v-card-title class="small-title">
+            Other Employees
+          </v-card-title>
+          <v-text-field
+            v-model="searchQuery"
+            label="Filter Employees"
+            prepend-inner-icon="mdi-magnify"
+          />
+          <div
+            v-for="participant in filteredNonParticipatingUsers"
+            :key="participant.id"
+            class="list-row"
+          >
+            <span class="form-title">
+              {{ participant.fullName }}
+            </span>
+            <v-btn
+              variant="plain"
+              icon="mdi-close"
+              class="close-button"
+              color="success"
+              @click="() => addParticipant(participant)"
+            >
+              ADD
+            </v-btn>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <style scoped>

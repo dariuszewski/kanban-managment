@@ -15,7 +15,7 @@ const route = useRoute()
       <v-main>
         <div class="main">
           <!-- <v-app> -->
-            <RouterView />
+          <RouterView />
           <!-- </v-app> -->
         </div>
       </v-main>

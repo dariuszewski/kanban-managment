@@ -68,19 +68,31 @@ function computeTasksCount() {
         </v-list-item>
       </v-list>
     </v-menu>
-    <div id="title" class="d-flex align-center">{{ props.project.name }}</div>
+    <div
+      id="title"
+      class="d-flex align-center"
+    >
+      {{ props.project.name }}
+    </div>
     <div id="stats">
-      <div id="subtitle">{{ computeParticipantsCount() }} users</div>
-      <div id="progress" class="d-flex align-center justify-space-between">
-          <div id="progress-bar">
-              <v-progress-linear 
-                color="success" 
-                :model-value="computeProjectCompleteness()" 
-                height="5"
-                bg-color="darkgrey"
-              ></v-progress-linear>
-          </div>
-          <div id="progress-value">{{ computeProjectCompleteness() }}%</div>
+      <div id="subtitle">
+        {{ computeParticipantsCount() }} users
+      </div>
+      <div
+        id="progress"
+        class="d-flex align-center justify-space-between"
+      >
+        <div id="progress-bar">
+          <v-progress-linear 
+            color="success" 
+            :model-value="computeProjectCompleteness()" 
+            height="5"
+            bg-color="darkgrey"
+          />
+        </div>
+        <div id="progress-value">
+          {{ computeProjectCompleteness() }}%
+        </div>
       </div>
     </div>
   </v-btn>

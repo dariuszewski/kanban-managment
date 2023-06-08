@@ -22,14 +22,18 @@ function handleTaskEdited() {
 </script>
 
 <template>
-  <v-col cols="12" sm="3" xs="12">
+  <v-col
+    cols="12"
+    sm="3"
+    xs="12"
+  >
     <v-sheet class="pa-3">
       <v-card class="single-column elevation-7 rounded-lg">
         <v-card-title class="title">
           {{ props.status }}
           <span class="tasks-count">{{ props.tasksCount }}</span>
         </v-card-title>
-        <v-divider :thickness="1"></v-divider>
+        <v-divider :thickness="1" />
         <div class="center-container">
           <v-btn
             variant="outlined"

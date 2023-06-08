@@ -40,7 +40,12 @@ watch(searchQuery, (newValue) => {
   <!-- Header -->
   <div class="header bg-bgcolor">
     <v-row no-gutters>
-      <v-col cols="12" md="3" sm="12" xs="12">
+      <v-col
+        cols="12"
+        md="3"
+        sm="12"
+        xs="12"
+      >
         <v-sheet class="pa-2 title bg-bgcolor">
           {{ props.projectName }}
         </v-sheet>
