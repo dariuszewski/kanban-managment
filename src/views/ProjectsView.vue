@@ -1,32 +1,37 @@
 <script setup>
-import { ref, reactive, computed, defineProps } from 'vue'
+import { ref, reactive, computed, defineProps, onBeforeMount } from 'vue'
 
 import { createPinia } from 'pinia'
 import { useUserStore } from "@/stores/user"
 import ProjectCard from "@/components/ProjectCard.vue"
 import projectsMock from "@/projectsMock.js"
 import AddProjectCard from '../components/AddProjectCard.vue'
-import { collection } from 'firebase/firestore'
+import { collection, getDocs, addDoc } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
-import { useCollection } from 'vuefire'
 
 
 const pinia = createPinia() 
 const userStore = useUserStore(pinia) // currently its used only to show user, but will be needed to load projects (probably)
 
 const user = computed(() => userStore.user)
-const projects = reactive(getAvailableProjects())
+const projects = ref([])
 
-function getAvailableProjects() {
-  // const availableProjects = projectsMock.filter(p => p.participants.includes(user.value.id))
-  const projects = useCollection(collection(db, 'projects'))
-  console.log(projects)
-  return projects
-}
+onBeforeMount(async () => {
+  const response = await getDocs(collection(db, 'projects'))
+  projects.value = response.docs.map(ref => {
+    const data = ref.data()
+    return {
+      id: ref.id,
+      name: data.name,
+      owner: data.owner,
+      participants: data.participants,
+      tasks: data.tasks,
+    }
+  })
+})
 
 function projectCreatedHandler(data) {
   console.log('project created handler', data)
-  // projects.push
 }
 
 </script>
