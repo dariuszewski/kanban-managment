@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main class="d-flex align-center justify-center">
-      <v-card color="#1E293C" dark class="pa-6 text-center" style="width: 700px; max-width: 90vw;">
+      <v-card color="#1E293C" dark class="pa-6 text-center" style="width: 800px; max-width: 90vw;">
         <v-card-text>
           <v-row justify="center" class="mb-10">
             <v-img :src="logo" aspect-ratio="1.7"></v-img>

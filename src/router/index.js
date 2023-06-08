@@ -41,7 +41,7 @@ const router = createRouter({
       path: '/account',
       name: 'account',
       component: AccountView,
-      meta: {requiresAuth: true}
+      meta: {requiresAuth: false}
     },
     {
       path: '/project/:id',
