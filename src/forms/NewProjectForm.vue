@@ -13,7 +13,7 @@ const projectStore = useProjectStore();
 
 // required data
 const isOpen = ref(props.isOpen); // is v-dialog opened
-const formType = ref(props.formType)
+const formType = ref(props.formType);
 const projectTitle = ref('')
 const participants = ref([])
 
@@ -59,9 +59,9 @@ watch(
 <template>
   <v-dialog
     v-model="isOpen"
-    @click:outside="closeForm"
     max-width="728"
     scrollable
+    @click:outside="closeForm"
   >
     <v-card>
       <div class="form-header">
@@ -73,41 +73,44 @@ watch(
           icon="mdi-close"
           class="close-button"
           @click="closeForm"
-        >
-        </v-btn>
+        />
       </div>
 
       <v-form class="newProjectForm">
         <v-row>
           <v-col sm="12">
             <v-text-field 
-              label="Project title" 
+              v-model="projectTitle" 
+              label="Project title"
               variant="underlined"
               prepend-inner-icon="mdi-pencil"
               hide-details
-              v-model="projectTitle"
-            ></v-text-field>   
+            />   
           </v-col>
         </v-row>
         <v-row>
           <v-col xs="12">
             <v-combobox
+              v-model="participants"
               :items="projectStore.getProjectParticipantsArray"
               item-title="fullName"
               item-value="id"
-              v-model="participants"
               label="Participants"
               variant="underlined"
               prepend-inner-icon="mdi-account-search"
               chips
               hide-details
               multiple
-            ></v-combobox>
+            />
           </v-col>
         </v-row>
         <div class="buttons">
           <v-row>
-            <v-col cols="12" md="6" xs="12">
+            <v-col 
+              cols="12"
+              md="6" 
+              xs="12"
+            >
               <v-btn
                 class="custom-button"
                 @click="closeForm"
@@ -115,7 +118,11 @@ watch(
                 Cancel
               </v-btn>
             </v-col>
-            <v-col cols="12" md="6" xs="12">
+            <v-col
+              cols="12"
+              md="6"
+              xs="12"
+            >
               <v-btn
                 class="custom-button bg-success"
                 prepend-icon="mdi-floppy"

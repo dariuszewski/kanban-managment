@@ -1,19 +1,25 @@
 <template>
-    <v-btn 
-        id="card" 
-        class="d-flex align-center justify-center flex-column" 
-        stacked
-        @click="toggleNewProjectForm"
-    >
-        <v-icon id="icon">mdi-plus</v-icon>
-        <div id="title">Add new</div>
-        <div id="subtitle">Create new project</div>
-    </v-btn>
-    <NewProjectForm 
-        :isOpen="showNewProjectForm"
-        @closeForm="toggleNewProjectForm"
-        @projectCreated="projectCreatedHandler"
-    />
+  <v-btn 
+    id="card" 
+    class="d-flex align-center justify-center flex-column" 
+    stacked
+    @click="toggleNewProjectForm"
+  >
+    <v-icon id="icon">
+      mdi-plus
+    </v-icon>
+    <div id="title">
+      Add new
+    </div>
+    <div id="subtitle">
+      Create new project
+    </div>
+  </v-btn>
+  <NewProjectForm 
+    :is-open="showNewProjectForm"
+    @close-form="toggleNewProjectForm"
+    @project-created="projectCreatedHandler"
+  />
 </template>
 
 <script setup>
