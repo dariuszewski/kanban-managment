@@ -4,6 +4,7 @@ const projectsMock = [
       id: 1,
       name: 'Scranton Branch General',
       participants: [1, 2],
+      owner: 1,
       tasks: [
         {
           owner: 1,
@@ -47,6 +48,7 @@ const projectsMock = [
       id: 2,
       name: 'Summer Sales Global',
       participants: [2],
+      owner: 2,
       tasks: [
         {
           owner: 1,
@@ -63,6 +65,7 @@ const projectsMock = [
       id: 3,
       name: 'Acron Branch Liquidation',
       participants: [1, 2],
+      owner: 1,
       tasks: [
         {
           owner: 1,
@@ -79,6 +82,7 @@ const projectsMock = [
       id: 4,
       name: 'Dunder Mifflin Infinity Dev',
       participants: [1, 2],
+      owner: 1,
       tasks: [
         {
           owner: 1,

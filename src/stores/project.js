@@ -44,6 +44,12 @@ export const useProjectStore = defineStore("project", {
     },
     async insertTask(data) {
       this.project.tasks.push(data) 
+    },
+    async removeParticipant(userId) {
+      this.project.participants = this.project.participants.filter(id => id !== userId);
+    },
+    async addParticipant(userId) {
+      this.project.participants.push(userId);
     }
   }, 
 });
