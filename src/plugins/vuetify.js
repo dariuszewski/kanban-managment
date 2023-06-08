@@ -20,6 +20,7 @@ const vuetify = createVuetify({
         info: '#2196F3',
         success: '#4CAF50',
         warning: '#FFC107',
+        bgcolor: '#F3F3F3',
       },
       dark: {
         primary: '#2196F3',
@@ -29,6 +30,7 @@ const vuetify = createVuetify({
         info: '#2196F3',
         success: '#4CAF50',
         warning: '#FB8C00',
+        bgcolor: '#F3F3F3',
       },
     },
     fonts: {

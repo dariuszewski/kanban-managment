@@ -38,15 +38,10 @@ watch(searchQuery, (newValue) => {
 
 <template>
   <!-- Header -->
-  <div class="header">
+  <div class="header bg-bgcolor">
     <v-row no-gutters>
-      <v-col
-        cols="12"
-        md="3"
-        sm="12"
-        xs="12"
-      >
-        <v-sheet class="pa-2 title">
+      <v-col cols="12" md="3" sm="12" xs="12">
+        <v-sheet class="pa-2 title bg-bgcolor">
           {{ props.projectName }}
         </v-sheet>
       </v-col>
@@ -124,9 +119,9 @@ watch(searchQuery, (newValue) => {
 
 .title {
   margin-top: 10px;
-  color: #5f6e72;
+  color: var(--color-font-grey);
   font-weight: 600;
-  font-size: 22px;
+  font-size: 1.5em;
 }
 
 .columns {
@@ -141,10 +136,11 @@ watch(searchQuery, (newValue) => {
 
 ::v-deep(.dp-custom-input) {
   height: 48px;
-  border: 1px solid white;
+  /* border: 1px solid white; */
   border-bottom: 1px solid #a8a8a8;
   padding-left: 10%;
   font-size: 16px;
+  background-color: inherit;
 }
 
 ::v-deep(.dp-custom-input:focus) {
@@ -153,6 +149,15 @@ watch(searchQuery, (newValue) => {
 
 ::v-deep(.dp-custom-input:hover) {
   border-bottom: 1px solid black;
+}
+
+::deep(.dp__input) {
+  background-color: inherit;
+  border: none !important
+}
+
+.v-sheet {
+  background: inherit;
 }
 
 </style>

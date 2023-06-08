@@ -22,24 +22,20 @@ function handleTaskEdited() {
 </script>
 
 <template>
-  <v-col
-    cols="12"
-    sm="3"
-    xs="12"
-  >
-    <v-sheet class="pa-2">
-      <v-card class="single-column">
+  <v-col cols="12" sm="3" xs="12">
+    <v-sheet class="pa-3">
+      <v-card class="single-column elevation-7 rounded-lg">
         <v-card-title class="title">
           {{ props.status }}
           <span class="tasks-count">{{ props.tasksCount }}</span>
         </v-card-title>
-        <v-divider :thickness="2" />
+        <v-divider :thickness="1"></v-divider>
         <div class="center-container">
           <v-btn
             variant="outlined"
             prepend-icon="mdi-plus-circle"
             density="compact"
-            class="add-task-btn"
+            class="add-task-btn rounded-lg"
             text="ADD ITEM"
             @click="toggleTaskEditForm"
           />
@@ -62,7 +58,8 @@ function handleTaskEdited() {
 
 <style scoped>
 .single-column {
-  min-height: 200px;
+  /* min-height: 200px; */
+  background: white;
 }
 
 .title {
@@ -85,20 +82,26 @@ function handleTaskEdited() {
 }
 
 .add-task-btn {
-  margin: 20px 0 0 0;
-  width: 80%;
+  margin: 20px 0 10px 0;
+  width: calc(100% - 15px - 15px);
   border: 1px dashed #5f6e72;
   color: #5f6e72;
   background-color: transparent;
+  font-weight: bold;
+  letter-spacing: 0px;
 }
 
 .tasks-wrapper {
-  margin: 20px 0 20px 0;
-  padding: 0 10% 0 10%;
-  min-height: 100px;
+  margin: 10px 0;
+  padding: 0 15px 0 15px;
+  /* min-height: 100px; */
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.v-sheet {
+  background: var(--color-background);
 }
 </style>
