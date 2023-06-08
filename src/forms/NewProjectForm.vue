@@ -1,22 +1,24 @@
 <script setup>
-import { defineProps, defineEmits, ref, reactive, watch, computed, nextTick } from "vue";
+import { defineProps, defineEmits, ref, reactive, watch, computed, nextTick, onBeforeMount } from "vue";
 import { useProjectStore } from "@/stores/project";
 import projectsMock from '@/projectsMock.js'
-import { collection } from 'firebase/firestore'
+import { collection, getDocs } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
-import { useCollection } from 'vuefire'
 
 const props = defineProps({
   isOpen: Boolean,
   formType: String,
 });
 
+const usersSelectList = ref([])
 
-const users = useCollection(collection(db, 'users'))
-const usersSelectList = users.value
-console.log('docs=', usersSelectList)
-console.log('docs.map=', usersSelectList.map(doc => doc.data()))
-
+onBeforeMount(async () => {
+  const response = await getDocs(collection(db, 'users'))
+  usersSelectList.value = response.docs.map(d => {
+    const data = d.data()
+    return { fullName: data.firstName + " " + data.lastName }
+  })
+})
 
 
 const projectStore = useProjectStore();
@@ -104,7 +106,6 @@ watch(
               v-model="participants"
               :items="usersSelectList"
               item-title="fullName"
-              item-value="id"
               label="Participants"
               variant="underlined"
               prepend-inner-icon="mdi-account-search"
