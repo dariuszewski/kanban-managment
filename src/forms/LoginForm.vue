@@ -2,6 +2,7 @@
   import { ref, reactive, computed, watch } from 'vue'
 import { useAuthStore } from '../stores/useAuthStore';
 import TheWelcome from '../components/TheWelcome.vue';
+import { auth } from '../components/firebase/config';
 
   const authStore = useAuthStore()
   // form validation
@@ -26,14 +27,12 @@ import TheWelcome from '../components/TheWelcome.vue';
   const login = async () => {
     loginForm.error = false
     if (loginForm.formValid) {
-        authStore.login(loginForm.email, loginForm.password).
-            then(res => console.log(res)).
-            catch(err => {
-              console.log(err)
-              loginForm.error = err
-              console.log(err)
-            }
-          )
+      try {
+        await authStore.login(loginForm.email, loginForm.password)
+      } catch (err) {
+        console.log(err)
+        loginForm.error = "Incorrect email or password"
+      }
     }
   }
 

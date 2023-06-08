@@ -12,11 +12,14 @@ export const useAuthStore = defineStore('authStore',{
   getters: {
     currentUser: (state) => {
       return state._userData
+    },
+    isAuthenticated: (state) => {
+      return state._userData != undefined
     }
   },
   actions: {
     async login(email, password){
-      signInWithEmailAndPassword(auth, email, password).
+      await signInWithEmailAndPassword(auth, email, password).
         then(res => {
           localStorage.setItem("_userData", JSON.stringify(res.user))
           this._userData = res.user
