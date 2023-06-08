@@ -9,12 +9,20 @@
           class="mb-3"
           style="color: #1E293C; font-size: 60px;"
         >
-         User information 
+          User information 
         </h2>
+       
         <v-row>
           <v-col cols="5">
             <v-card class="pa-4">
               <v-form>
+                <v-alert
+                  v-if="form.success"
+                  class="mt-2 mb-5 bg-success"
+                  :dismissible="true"
+                >
+                  {{ form.successText }}
+                </v-alert>
                 <v-text-field
                   v-model="form.firstName"
                   label="First Name"
@@ -27,7 +35,8 @@
                   label="Last Name"
                   :hint="hintText"
                   readonly 
-                  class="mb-10"/> 
+                  class="mb-10"
+                /> 
                 <v-text-field
                   v-model="form.email"
                   label="E-mail"
@@ -85,30 +94,46 @@
 </template>
 
 <script setup>
-  import { reactive, ref } from 'vue'
+  import { onMounted, reactive, ref } from 'vue'
   import { db } from '../components/firebase/config'
-  import {collection, setDoc, getDoc, doc} from "firebase/firestore"
+  import {collection, updateDoc, getDoc, doc} from "firebase/firestore"
   import { useAuthStore } from '../stores/useAuthStore';
   const showColorPicker = ref(false)
-  const hintText = "Contact your manager if you need to update this data"
   const form = reactive({
-    firstName: 'John',
-    lastName: 'Dupa',
-    color: '#FF00FF',
-    email: 'dawdawdawowa',
+    firstName: '',
+    lastName: '',
+    color: '',
+    email: '',
+    success: false,
+    successText: 'Profile updated successfully', 
   })
+  const hintText = "Contact your manager if you need to update this data"
+
   const getInitials = () => form.firstName.charAt(0).toUpperCase() + form.lastName.charAt(0).toUpperCase();
   const toggleColorPicker = () => showColorPicker.value = !showColorPicker.value;
   const hideColorPicker = () =>  showColorPicker.value = false;
   
   const authStore = useAuthStore()
-  getDoc(doc(db, "users", authStore.currentUser.uid)).
-    then(res => console.log(res))
-
+  onMounted(async () => {
+    try {
+      const resp = await getDoc(doc(db, "users", authStore.currentUser.uid))
+      const data = resp.data()
+      form.firstName = data.firstName
+      form.lastName = data.lastName
+      form.color = data.color
+      form.email = data.email
+    } catch(err) {
+      console.log(err)
+    }
+  })
   const submit = () => {
-    // const dbRef = collection(db, "users")
     console.log(authStore.currentUser.uid)
-    // setDoc(doc(db,"users", ))
+    updateDoc(doc(db,"users", authStore.currentUser.uid), {
+      color: form.color
+    }).then(res => {
+      form.success = true
+      setTimeout(()=>form.success = false, 1000)
+  })
   }
 </script>
 
