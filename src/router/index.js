@@ -7,6 +7,7 @@ import LoginRegisterView from '../views/LoginRegisterView.vue'
 import ProjectsView from '../views/ProjectsView.vue'
 import ProjectView from '../views/ProjectView.vue'
 import ForbiddenView from '../views/ForbiddenView.vue'
+import NotFoundView from '../views/NotFoundView.vue'
 import AccountView from '../views/AccountView.vue'
 
 
@@ -39,7 +40,7 @@ const router = createRouter({
       component: AccountView,
     },
     {
-      path: '/projects/:id',
+      path: '/project/:id',
       name: 'project',
       props: true,
       component: ProjectView,
@@ -47,7 +48,10 @@ const router = createRouter({
         // get current project
         const projectId = to.params.id
         const currentProject = projectsMock.filter(p => p.id == projectId).pop()
-        // TODO: Add if not currentProject then Not Found
+        if (!currentProject) {
+          // if project doesn't exist return 404
+          next({ name: 'notFound' })
+        }
         // get user and check if participates in a project
         const userId = userStore.user.id || null
         const userBelongsToProject = currentProject.participants.includes(userId)
@@ -63,6 +67,11 @@ const router = createRouter({
       path: '/forbidden',
       name: 'forbidden',
       component: ForbiddenView,
+    },
+    {
+      path: '/notfound',
+      name: 'notFound',
+      component: NotFoundView,
     },
   ]
 })
