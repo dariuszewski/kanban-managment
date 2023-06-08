@@ -19,6 +19,11 @@ function getAvailableProjects() {
   return availableProjects
 }
 
+function projectCreatedHandler(data) {
+  console.log('project created handler', data)
+  projects.push(data)
+}
+
 </script>
 
 <template>
@@ -54,7 +59,9 @@ function getAvailableProjects() {
         sm="4"
         md="3"
       >
-        <AddProjectCard></AddProjectCard>
+        <AddProjectCard
+          @projectCreated="projectCreatedHandler"
+        ></AddProjectCard>
       </v-col>
     </v-row>
     <!-- end of projects section -->
