@@ -1,6 +1,6 @@
 <template>
   <router-link
-    :to="path"
+    :to="{name: path}"
     style="text-decoration: none;"
   >
     <v-list-item
