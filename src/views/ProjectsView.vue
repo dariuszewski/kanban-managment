@@ -6,6 +6,8 @@ import { useUserStore } from "@/stores/user"
 import ProjectCard from "@/components/ProjectCard.vue"
 import projectsMock from "@/projectsMock.js"
 
+import AddProjectCard from '../components/AddProjectCard.vue'
+
 const pinia = createPinia() 
 const userStore = useUserStore(pinia) // currently its used only to show user, but will be needed to load projects (probably)
 
@@ -23,11 +25,11 @@ function getAvailableProjects() {
   <div class="main-wrapper">
     <!-- <v-container> -->
     <!-- header -->
-    <v-row class="mt-5">
-      <h1>Hello, {{ user.firstName }}</h1>
+    <v-row class="mt-5" no-gutters>
+      <h1 id="title">Hello, {{ user.firstName }}</h1>
     </v-row>
-    <v-row class="mt-12 mb-12">
-      <h3><i>Select a project...</i></h3>
+    <v-row class="mt-12 mb-12" no-gutters>
+      <h2 id="subtitle">Select a project...</h2>
     </v-row>
     <!-- end of header -->
     <!-- projects section -->
@@ -52,21 +54,7 @@ function getAvailableProjects() {
         sm="4"
         md="3"
       >
-        <v-card
-          class="d-flex align-center justify-center add-project"
-          height="200"
-          width="200"
-        >
-          <div class="text-center">
-            <v-icon
-              icon="mdi-folder-plus"
-              size="x-large"
-            />
-            <v-card-text class="project-name">
-              Create New Project
-            </v-card-text>
-          </div>
-        </v-card>
+        <AddProjectCard></AddProjectCard>
       </v-col>
     </v-row>
     <!-- end of projects section -->
@@ -77,8 +65,15 @@ function getAvailableProjects() {
 
 <style scoped>
 
-  h3 {
-    color:rgb(219, 219, 219)
+  #title {
+    /* color: grey; */
+    color: var(--color-font-grey)
+  }
+
+  #subtitle {
+    font-style: italic;
+    font-weight: 100;
+    color: var(--color-font-grey);
   }
 
   .add-project:hover {

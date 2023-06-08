@@ -35,89 +35,121 @@ function computeTasksCount() {
 </script>
 
 <template>
-  <v-card
-    class="align-center"
-    height="200"
-    width="200"
+  <v-btn 
+    id="card" 
+    class="d-flex align-center justify-center flex-column" 
+    stacked 
+    @click.stop="router.push({ name: 'project', params: { id: props.project.id } })"
   >
-    <v-toolbar class="card-top">
-      <v-spacer />
-      <v-menu>
-        <template #activator="{ props }">
-          <v-btn
-            icon="mdi-dots-vertical"
-            v-bind="props"
-            flat
-          />
-        </template>
-        <v-list>
-          <router-link :to="{ name: 'project', params: { id: props.project.id } }">
-            <v-list-item
-              class="menu-item"
-              clickable
-            >
-              <v-list-item-title>Open</v-list-item-title>
-            </v-list-item>
-          </router-link>
-
+    <v-menu>
+      <template #activator="{ props }">
+        <v-btn
+          id="more"
+          icon="mdi-dots-vertical"
+          v-bind="props"
+          flat
+        />
+      </template>
+      <v-list>
+        <router-link :to="{ name: 'project', params: { id: props.project.id } }">
           <v-list-item
             class="menu-item"
             clickable
           >
-            <v-list-item-title>Manage</v-list-item-title>
+            <v-list-item-title>Open</v-list-item-title>
           </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-toolbar>
+        </router-link>
 
-    <div class="text-center">
-      <v-card-text class="project-name">
-        {{ props.project.name }}
-      </v-card-text>
-      <div class="progress-wrapper">
-        <small>Users: {{ computeParticipantsCount() }}</small>
-        <small>Tasks: {{ computeTasksCount() }}</small>
-        <div class="progress-bar">
-          <v-progress-linear
-            :model-value="computeProjectCompleteness()"
-            class="mb-2"
-            bg-color="success"
-            color="success"
-            height="8"
-            rounded
-            dense
-          />
-          {{ computeProjectCompleteness() }}%
-        </div>
+        <v-list-item
+          class="menu-item"
+          clickable
+        >
+          <v-list-item-title>Manage</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+    <div id="title" class="d-flex align-center">{{ props.project.name }}</div>
+    <div id="stats">
+      <div id="subtitle">{{ computeParticipantsCount() }} users</div>
+      <div id="progress" class="d-flex align-center justify-space-between">
+          <div id="progress-bar">
+              <v-progress-linear 
+                color="success" 
+                :model-value="computeProjectCompleteness()" 
+                height="5"
+                bg-color="darkgrey"
+              ></v-progress-linear>
+          </div>
+          <div id="progress-value">{{ computeProjectCompleteness() }}%</div>
       </div>
     </div>
-  </v-card>
+  </v-btn>
 </template>
 
 
 <style scoped>
 
-h3 {
-  color: rgb(219, 219, 219);
+#card {
+    width: 22em;
+    height: 22em;
+    background-color: white;
+    color: var(--color-font-grey);
+    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.15);
+    margin: 30px;
 }
 
-.menu-item:hover {
-  cursor: pointer;
-  background-color: rgb(227, 227, 227)
+#card:hover {
+    color: black;
 }
 
-.project-name {
-  font-size: 20px;
+#more {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 5px;
 }
 
-.progress-wrapper {
-  width: 80%;
-  margin: auto;
+#title {
+    font-size: 2.8em;
+    font-weight: bold;
+    /* margin: 10px; */
+    height: 80%;
+}
+
+#subtitle {
+    font-size: 1em;
+}
+
+#stats {
+  width: 100%;
+  height: 20%;
+
+}
+
+#progress {
+    width: 80%;
+    margin: 10px auto 0 auto;
+}
+
+#progress-bar{
+    width: 80%;
+}
+
+.v-btn {
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+::v-deep(.v-btn__content) {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 a {
   color: black;
   text-decoration: none;
-}
+} 
 
 </style>

@@ -61,7 +61,8 @@ const projectsMock = [
     },
     {
       id: 3,
-      name: 'Acron Branch Liquidation',
+      // name: 'Acron Branch Liquidation',
+      name: 'Acron',
       participants: [1, 2],
       tasks: [
         {
