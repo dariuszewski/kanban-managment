@@ -41,14 +41,17 @@ const toggleTaskEditForm = () => {
   <div class="task">
     <v-card class="task-card">
       <div class="task-header">
-        <span class="task-title" @click="toggleTaskEditForm">{{ task.title }}</span>
-          <TaskEditForm 
-            :task="task"
-            :isOpen="showTaskEditForm" 
-            :formType="'Edit'"
-            @closeForm="toggleTaskEditForm"
-            @taskEdited="handleTaskEdited"
-          />
+        <span
+          class="task-title"
+          @click="toggleTaskEditForm"
+        >{{ task.title }}</span>
+        <TaskEditForm 
+          :task="task"
+          :is-open="showTaskEditForm" 
+          :form-type="'Edit'"
+          @closeForm="toggleTaskEditForm"
+          @taskEdited="handleTaskEdited"
+        />
         <span class="task-due-date">{{ task.dueDate }}</span>
       </div>
       <div class="task-summary">
