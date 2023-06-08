@@ -82,7 +82,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   const authStore = useAuthStore(pinia)
-  if (to.meta && to.meta.requiresAuth && !authStore.isAuthenticated) {
+  if (to.meta && to.meta.requiresAuth && !authStore.isAuthenticated && !to.fullPath.includes('login')) {
     console.log("redirecting unautheticated user")
     return {
       path: '/login',
