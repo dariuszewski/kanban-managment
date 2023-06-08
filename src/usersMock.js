@@ -16,6 +16,22 @@ const usersMock = [
     email: 'jane.smith@example.com',
     password: 'qwertyui', // 'password'
     },
+    {
+      id: 3,
+      firstName: 'Foo',
+      lastName: 'Bar',
+      fullName: 'Foo Bar',
+      email: 'foo.bar@example.com',
+      password: 'abcdefghijklmn', // 'password'
+    },
+    {
+      id: 3,
+      firstName: 'Bob',
+      lastName: 'Marley',
+      fullName: 'Bob Marley',
+      email: 'bob.marley@example.com',
+      password: 'abcdefghijklmn', // 'password'
+    },
 ]
   
 
