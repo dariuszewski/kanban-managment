@@ -7,6 +7,7 @@ const usersMock = [
     fullName: 'John Doe',
     email: 'john.doe@example.com',
     password: 'asdfghjk', // 'password'
+    color: '#FF00FF'
     },
     {
     id: 2,
@@ -15,6 +16,7 @@ const usersMock = [
     fullName: 'Jane Smith',
     email: 'jane.smith@example.com',
     password: 'qwertyui', // 'password'
+    color: '#FF00FF'
     },
     {
       id: 3,
@@ -23,6 +25,7 @@ const usersMock = [
       fullName: 'Foo Bar',
       email: 'foo.bar@example.com',
       password: 'abcdefghijklmn', // 'password'
+      color: '#FF00FF'
     },
     {
       id: 3,
@@ -31,6 +34,7 @@ const usersMock = [
       fullName: 'Bob Marley',
       email: 'bob.marley@example.com',
       password: 'abcdefghijklmn', // 'password'
+      color: '#FF00FF'
     },
 ]
   

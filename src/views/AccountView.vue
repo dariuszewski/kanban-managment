@@ -61,7 +61,18 @@
   </v-app>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
+import usersMock from "@/usersMock.js";
+
+const showColorPicker = ref(false)
+
+
+function getInitials() {
+  return firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+}
+
+
 export default {
   data() {
     return {
