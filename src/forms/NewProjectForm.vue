@@ -2,11 +2,21 @@
 import { defineProps, defineEmits, ref, reactive, watch, computed, nextTick } from "vue";
 import { useProjectStore } from "@/stores/project";
 import projectsMock from '@/projectsMock.js'
+import { collection } from 'firebase/firestore'
+import { db } from '@/components/firebase/config.js'
+import { useCollection } from 'vuefire'
 
 const props = defineProps({
   isOpen: Boolean,
   formType: String,
 });
+
+
+const users = useCollection(collection(db, 'users'))
+const usersSelectList = users.value
+console.log('docs=', usersSelectList)
+console.log('docs.map=', usersSelectList.map(doc => doc.data()))
+
 
 
 const projectStore = useProjectStore();
@@ -92,7 +102,7 @@ watch(
           <v-col xs="12">
             <v-combobox
               v-model="participants"
-              :items="projectStore.getProjectParticipantsArray"
+              :items="usersSelectList"
               item-title="fullName"
               item-value="id"
               label="Participants"

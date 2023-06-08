@@ -5,8 +5,11 @@ import { createPinia } from 'pinia'
 import { useUserStore } from "@/stores/user"
 import ProjectCard from "@/components/ProjectCard.vue"
 import projectsMock from "@/projectsMock.js"
-
 import AddProjectCard from '../components/AddProjectCard.vue'
+import { collection } from 'firebase/firestore'
+import { db } from '@/components/firebase/config.js'
+import { useCollection } from 'vuefire'
+
 
 const pinia = createPinia() 
 const userStore = useUserStore(pinia) // currently its used only to show user, but will be needed to load projects (probably)
@@ -15,13 +18,15 @@ const user = computed(() => userStore.user)
 const projects = reactive(getAvailableProjects())
 
 function getAvailableProjects() {
-  const availableProjects = projectsMock.filter(p => p.participants.includes(user.value.id))
-  return availableProjects
+  // const availableProjects = projectsMock.filter(p => p.participants.includes(user.value.id))
+  const projects = useCollection(collection(db, 'projects'))
+  console.log(projects)
+  return projects
 }
 
 function projectCreatedHandler(data) {
   console.log('project created handler', data)
-  projects.push
+  // projects.push
 }
 
 </script>
@@ -51,7 +56,7 @@ function projectCreatedHandler(data) {
     <v-row>
       <template
         v-for="project in projects"
-        :key="project.id"
+        :key="project.name"
       >
         <v-col
           xs="12"
