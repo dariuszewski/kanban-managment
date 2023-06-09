@@ -1,22 +1,22 @@
 <script setup>
-import { ref, reactive, computed, defineProps, onBeforeMount } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 
-import { createPinia } from 'pinia'
-import { useUserStore } from "@/stores/user"
 import ProjectCard from "@/components/ProjectCard.vue"
-import projectsMock from "@/projectsMock.js"
 import AddProjectCard from '../components/AddProjectCard.vue'
-import { collection, getDocs, addDoc } from 'firebase/firestore'
+import { collection, getDocs, getDoc, doc } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
+import { useAuthStore } from '../stores/useAuthStore'
 
 
-const pinia = createPinia() 
-const userStore = useUserStore(pinia) // currently its used only to show user, but will be needed to load projects (probably)
+const authStore = useAuthStore() // currently its used only to show user, but will be needed to load projects (probably)
 
-const user = computed(() => userStore.user)
+const userFirstName = ref('') 
 const projects = ref([])
 
 onBeforeMount(async () => {
+  const resp = await getDoc(doc(db, "users", authStore.currentUser.uid))
+  const data = resp.data()
+  userFirstName.value = data.firstName
   const response = await getDocs(collection(db, 'projects'))
   projects.value = response.docs.map(ref => {
     const data = ref.data()
@@ -45,7 +45,7 @@ function projectCreatedHandler(data) {
       no-gutters
     >
       <h1 id="title">
-        Hello, {{ user.firstName }}
+        Hello, {{ userFirstName }}
       </h1>
     </v-row>
     <v-row 
