@@ -12,7 +12,6 @@ const emit = defineEmits(["taskEdited"])
 
 function toggleTaskEditForm() {
   showTaskEditForm.value = !showTaskEditForm.value;
-  console.log('hello world - ', showTaskEditForm.value)
 }
 
 function handleTaskEdited() {

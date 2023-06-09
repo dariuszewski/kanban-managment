@@ -93,6 +93,7 @@ function assignPiniaContentToTaskArrays() {
 let refreshTrigger = ref(0);
 function refreshColumnsContentsWithPiniaStore() {
   // This is very important function! It forces the KanbanColumn component to refresh.
+  project.tasks = projectStore.project.tasks
   assignPiniaContentToTaskArrays()
   refreshTrigger.value += 1;
 }
