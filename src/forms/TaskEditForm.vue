@@ -1,6 +1,7 @@
 <script setup>
 import { defineProps, defineEmits, ref, watch, computed, nextTick } from "vue";
 import { useProjectStore } from "@/stores/project";
+import { useAuthStore } from "@/stores/useAuthStore";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
@@ -19,6 +20,7 @@ const props = defineProps({
 
 
 const projectStore = useProjectStore();
+const userStore = useAuthStore();
 
 function getTaskOwnerById() {
   return projectStore.getProjectParticipantsArray.find(
@@ -78,8 +80,11 @@ async function saveChanges() {
     title: taskTitle, 
     summary: description.value,
     dueDate: dateString,
-    status: selectedStatus.value 
+    timestamp: date.value,
+    status: selectedStatus.value,
   }
+
+  console.log('saving task', updatedTask)
  
   if (props.formType === 'Edit') {
       // PUT REQUEST HERE

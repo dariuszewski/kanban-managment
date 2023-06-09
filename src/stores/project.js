@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import projectsMock from "@/projectsMock.js";
 import usersMock from "@/usersMock.js"
-import { collection, getDocs, addDoc, doc, getDoc, query, where, FieldPath } from 'firebase/firestore'
+import { collection, getDocs, addDoc, updateDoc, doc, getDoc, query, where, FieldPath } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
 
 
@@ -18,7 +18,7 @@ export const useProjectStore = defineStore("project", {
       return state.project;
     },
     getProjectParticipantsArray: (state) => {
-      return usersMock.filter((user) => state.project.participants.includes(user.id));
+      return state.project.participants;
     },
     projectTasks: (state) =>  {
       return state.project.tasks;
@@ -76,7 +76,12 @@ export const useProjectStore = defineStore("project", {
       this.project.tasks.push(data) 
     },
     async insertTask(data) {
-      this.project.tasks.push(data) 
+      this.project.tasks.push(data)
+      const projectRef = doc(db, "projects", this.project.id);
+
+      await updateDoc(projectRef, {
+        tasks: this.project.tasks
+      });
     },
     async removeParticipant(userId) {
       this.project.participants = this.project.participants.filter(id => id !== userId);

@@ -130,6 +130,7 @@ onBeforeMount(async () => {
   project.name = projectStore.project.name;
   project.tasks = projectStore.project.tasks;
   project.participants = projectStore.project.participants
+  refreshColumnsContentsWithPiniaStore();
 })
 </script>
 
@@ -185,7 +186,8 @@ onBeforeMount(async () => {
 }
 
 .drag-into {
-  min-width: 200px;
+  width: 100%;
+  /* min-width: 200px; */
   min-height: 100px;
 }
 

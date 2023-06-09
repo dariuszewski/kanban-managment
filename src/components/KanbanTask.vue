@@ -3,18 +3,21 @@ import { ref } from 'vue';
 import TaskEditForm from '../forms/TaskEditForm.vue'
 
 import usersMock from "@/usersMock.js";
+import { useProjectStore } from '../stores/project';
 
 
 const props = defineProps({
   task: Object,
 });
 
+const projectStore = useProjectStore();
+
 const emit = defineEmits(["taskEdited"])
 
 const showTaskEditForm = ref(false);
 
 function _getTaskOwner(taskOwnerId) {
-  return usersMock.filter((user) => user.id === taskOwnerId).pop();
+  return projectStore.project.participants.filter((user) => user.id === taskOwnerId).pop();
 }
 
 function getNameAndLastName(taskOwnerId) {
