@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { createPinia } from 'pinia'
 import { useUserStore } from "@/stores/user"
 
-import HomeView from '../views/HomeView.vue'
 import LoginRegisterView from '../views/LoginRegisterView.vue'
 import ProjectsView from '../views/ProjectsView.vue'
 import ProjectView from '../views/ProjectView.vue'
@@ -22,8 +21,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      redirect: { name: 'projects' },
       meta: {requiresAuth: true}
     },
     {

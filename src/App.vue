@@ -24,7 +24,6 @@ const route = useRoute()
 </template>
 
 <style>
-  @import './assets/global.css';
   .navbar {
     background-color: var(--navbar-main);
   }

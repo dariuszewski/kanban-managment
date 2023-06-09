@@ -1,6 +1,5 @@
 <script setup>
   import { ref } from 'vue'
-  import LoginRegisterForms from '../components/LoginRegister.vue'
   import LoginForm from '../forms/LoginForm.vue'
 
 </script>

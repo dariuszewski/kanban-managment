@@ -1,7 +1,6 @@
 <script setup>
   import { ref, reactive, computed, watch } from 'vue'
 import { useAuthStore } from '../stores/useAuthStore';
-import TheWelcome from '../components/TheWelcome.vue';
 import { auth } from '../components/firebase/config';
 
   const authStore = useAuthStore()
