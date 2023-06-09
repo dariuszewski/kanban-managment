@@ -49,6 +49,7 @@ async function saveChanges() {
   // WHOLE THING CAN ACTUALLY BE MADE MORE SIMILAR TO THE LOGIN FORM
 
   const projectDetails = {
+    lastTaskId: 0,
     owner: 1,  //currentOwner.value.id,
     name: projectTitle.value,
     participants: participants.value.map(el => el.id),
