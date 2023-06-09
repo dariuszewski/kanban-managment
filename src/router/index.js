@@ -85,24 +85,24 @@ const router = createRouter({
       name: 'manage',
       component: ManageView,
       props: true,
-      beforeEnter: (to, from, next) => {
-        // get current project
-        const projectId = to.params.id
-        const currentProject = projectsMock.filter(p => p.id == projectId).pop()
-        if (!currentProject) {
-          // if project doesn't exist return 404
-          next({ name: 'notFound' })
-        }
-        // get user and check if participates in a project
-        const userId = userStore.user.id || null
-        const userBelongsToProject = currentProject.participants.includes(userId)
-        // return a route
-        if (userBelongsToProject) {
-          next()
-        } else {
-          next({ name: 'forbidden' })
-        }
-      }
+      // beforeEnter: (to, from, next) => {
+      //   // get current project
+      //   const projectId = to.params.id
+      //   const currentProject = projectsMock.filter(p => p.id == projectId).pop()
+      //   if (!currentProject) {
+      //     // if project doesn't exist return 404
+      //     next({ name: 'notFound' })
+      //   }
+      //   // get user and check if participates in a project
+      //   const userId = userStore.user.id || null
+      //   const userBelongsToProject = currentProject.participants.includes(userId)
+      //   // return a route
+      //   if (userBelongsToProject) {
+      //     next()
+      //   } else {
+      //     next({ name: 'forbidden' })
+      //   }
+      // }
     },
   ]
 })

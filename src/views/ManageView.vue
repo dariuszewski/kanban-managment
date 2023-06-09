@@ -1,37 +1,60 @@
 <script setup>
-import { ref, computed, reactive, onMounted, watch } from "vue";
+import { ref, computed, reactive, onMounted, watch, onBeforeMount } from "vue";
 
 import { useProjectStore } from "@/stores/project";
-import usersMock from "@/usersMock.js";
+import { useAuthStore } from '../stores/useAuthStore'
+import { collection, getDocs, addDoc } from 'firebase/firestore'
+import { db } from '@/components/firebase/config.js'
+
 
 
 const props = defineProps({
   id: String,
 });
 
-// global project instances and possible taskStatuses
-const projectStore = useProjectStore();
-let project = ref({})
-let projectOwner = reactive({})
-let projectParticipants = ref([]) 
-let nonParticipatingUsers = ref([]) 
+const authStore = useAuthStore()
+const projectStore = useProjectStore();  // global project instances and possible taskStatuses
+const project = ref({})
+const projectOwner = ref({})
+const projectParticipants = ref([])
+const nonParticipatingUsers = ref([])
 
+onBeforeMount(async () => {
+  await projectStore.fetchProject(props.id)
+  project.value = projectStore.project
+  projectOwner.value = projectStore.project.owner;
+
+  const response = await getDocs(collection(db, 'users'))
+  const allUsers = response.docs.map(ref => {
+    const data = ref.data()
+    return {
+      id: ref.id,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      fullName: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      color: data.color,
+    }
+  })
+
+  const projectParticipantsIds = projectStore.project.participants.map(p => p.id)
+
+  projectParticipants.value = allUsers.filter(el => projectParticipantsIds.includes(el.id))
+  nonParticipatingUsers.value = allUsers.filter(el => !projectParticipantsIds.includes(el.id))
+  projectOwner.value = allUsers.find(el => projectStore.project.owner == el.id)
+})
 const searchQuery = ref('')
-
-function getProjectOwner() {
-    const ownerId = project.value.owner;
-    const ownerData = usersMock.find((user) => user.id === ownerId);
-    return ownerData
-}
 
 function removeParticipant(participant) {
   nonParticipatingUsers.value.push(participant)
-  projectParticipants.value = projectParticipants.value.filter(p => p !== participant)
+  projectParticipants.value = projectParticipants.value.filter(p => p.id !== participant.id)
+  projectStore.removeParticipant(participant)
 }
 
 function addParticipant(participant) {
   projectParticipants.value.push(participant)
-  nonParticipatingUsers.value = nonParticipatingUsers.value.filter(p => p !== participant)
+  nonParticipatingUsers.value = nonParticipatingUsers.value.filter(p => p.id !== participant.id)
+  projectStore.addParticipant(participant)
 }
 
 
@@ -54,29 +77,6 @@ watch(searchQuery, (newValue) => {
   // Update the filtered results when the search query changes
 });
 
-// FETCH THE DATA AND MOUNT HERE ////////////////////////////////////////////////
-const fetchProject = () => {
-  // Simulate an asynchronous API request with a delay
-  // GET request here
-  // The plan is to GET a project, assign it to Pinia store so it is accessible across =
-  // all components which would need it and also create a separate instance for filtartion.
-  setTimeout(() => {
-    // add ref loaded flag as false at the begenning and true at the end to wait for a data
-    projectStore.fetchProject(props.id)
-    
-    project.value = projectStore.currentProject
-
-    projectOwner = usersMock.find((user) => user.id === project.value.owner);
-    projectParticipants.value = projectStore.getProjectParticipantsArray.filter((user) => user.id !== projectOwner.id)
-    nonParticipatingUsers.value = usersMock.filter((user) => !projectStore.getProjectParticipantsArray.includes(user))
-    // console.log(projectParticipants)
-    // // project.participants = projectStore.getProjectParticipantsArray.filter((user) => user.id !== p.owner)
-  }, 500);
-};
-
-onMounted(() => {
-  fetchProject();
-});
 </script>
 
 
@@ -114,7 +114,7 @@ onMounted(() => {
             class="list-row"
           >
             <span class="form-title">
-              {{ getProjectOwner().fullName }}
+              {{ projectOwner.fullName }}
             </span>
             <v-btn
               variant="plain"
@@ -197,6 +197,7 @@ onMounted(() => {
   color: #5f6e72;
   font-weight: 600;
   font-size: 22px;
+  background: var(--color-background);
 }
 
 .small-title {

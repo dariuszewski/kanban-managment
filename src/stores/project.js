@@ -37,10 +37,11 @@ export const useProjectStore = defineStore("project", {
           name: projectData.name,
           tasks: projectData.tasks,
           lastTaskId: projectData.lastTaskId,
+          participantsIds: projectData.participants,
           // participants are queried by separate request below
         }
         // query by document id
-        const usersQuery = query(collection(db, 'users'), where('__name__', "in", projectData.participants))
+        const usersQuery = query(collection(db, 'users'), where('__name__', "in", this.project.participantsIds))
         const usersRef = await getDocs(usersQuery)
         const participants = usersRef.docs.map(ref => {
           const userData = ref.data()
@@ -92,11 +93,23 @@ export const useProjectStore = defineStore("project", {
         lastTaskId: taskId,
       });
     },
-    async removeParticipant(userId) {
-      this.project.participants = this.project.participants.filter(id => id !== userId);
+    async removeParticipant(user) {
+      this.project.participants = this.project.participants.filter(p => p.id !== user.id);
+      this.project.participantsIds = this.project.participantsIds.filter(pid => pid !== user.id);
+
+      const projectRef = doc(db, "projects", this.project.id);
+      await updateDoc(projectRef, {
+        participants: this.project.participantsIds
+      });
     },
-    async addParticipant(userId) {
-      this.project.participants.push(userId);
+    async addParticipant(user) {
+      this.project.participants.push(user);
+      this.project.participantsIds.push(user.id);
+
+      const projectRef = doc(db, "projects", this.project.id);
+      await updateDoc(projectRef, {
+        participants: this.project.participantsIds
+      });
     }
   }, 
 });
