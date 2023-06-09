@@ -1,7 +1,6 @@
 <script setup>
-import { defineProps, defineEmits, ref, reactive, watch, computed, nextTick, onBeforeMount } from "vue";
+import { defineProps, defineEmits, ref, watch, onBeforeMount } from "vue";
 import { useProjectStore } from "@/stores/project";
-import projectsMock from '@/projectsMock.js'
 import { collection, getDocs, addDoc } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
 

@@ -1,8 +1,7 @@
 <script setup>
-import { ref, reactive, computed, defineProps } from "vue";
+import { defineProps } from "vue";
 import router from '../router'
 
-import projectsMock from "@/projectsMock.js";
 
 const props = defineProps({
   // id: Number,

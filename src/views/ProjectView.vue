@@ -1,17 +1,12 @@
 <script setup>
-import { ref, computed, reactive, onMounted, watch, toRaw, onBeforeMount } from "vue";
+import { ref, reactive, watch, onBeforeMount } from "vue";
 import Draggable from "vue3-draggable";
 import KanbanPageHeader from "@/components/KanbanPageHeader.vue";
 import KanbanColumn from "@/components/KanbanColumn.vue";
 import KanbanTask from "@/components/KanbanTask.vue";
-import router from '../router'
 
 import { useProjectStore } from "@/stores/project";
 import { useAuthStore } from "@/stores/useAuthStore";
-import projectsMock from "@/projectsMock.js";
-import usersMock from "@/usersMock.js";
-import { collection, getDocs, addDoc, doc, getDoc } from 'firebase/firestore'
-import { db } from '@/components/firebase/config.js'
 
 
 const props = defineProps({
