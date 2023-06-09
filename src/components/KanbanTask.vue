@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import TaskEditForm from '../forms/TaskEditForm.vue'
 
 import { useProjectStore } from '../stores/project';
@@ -9,13 +9,17 @@ const props = defineProps({
   task: Object,
 });
 
+console.log('taks', props.task)
+
 const projectStore = useProjectStore();
+const owner = ref({})
 
 const emit = defineEmits(["taskEdited"])
 
 const showTaskEditForm = ref(false);
 
 function _getTaskOwner(taskOwnerId) {
+  // return projectStore.project.participants.filter((user) => user.id === taskOwnerId).pop();
   return projectStore.project.participants.filter((user) => user.id === taskOwnerId).pop();
 }
 
@@ -36,6 +40,11 @@ function handleTaskEdited() {
 const toggleTaskEditForm = () => {
   showTaskEditForm.value = !showTaskEditForm.value;
 };
+
+onBeforeMount(async () => {
+  owner.value = await _getTaskOwner(props.task.owner)
+  console.log(owner.value)
+})
 
 </script>
 
@@ -65,7 +74,7 @@ const toggleTaskEditForm = () => {
           <span class="task-owner-name">{{
             getNameAndLastName(task.owner)
           }}</span>
-          <span class="task-owner-initials">{{ getInitials(task.owner) }}</span>
+          <span class="task-owner-initials" :style="{'background-color':owner.color}">{{ getInitials(task.owner) }}</span>
         </div>
       </div>
     </v-card>
