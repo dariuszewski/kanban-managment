@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import NewProjectForm from '../forms/NewProjectForm.vue'
 
 const emit = defineEmits(["projectCreated"]);

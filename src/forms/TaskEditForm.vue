@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits, ref, watch, computed, nextTick } from "vue";
+import { defineProps, defineEmits, ref, watch } from "vue";
 import { useProjectStore } from "@/stores/project";
 import { useAuthStore } from "@/stores/useAuthStore";
 import VueDatePicker from "@vuepic/vue-datepicker";

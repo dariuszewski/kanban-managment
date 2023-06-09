@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import TaskEditForm from '../forms/TaskEditForm.vue'
 
-import usersMock from "@/usersMock.js";
 import { useProjectStore } from '../stores/project';
 
 

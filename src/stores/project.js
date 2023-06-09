@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
-import projectsMock from "@/projectsMock.js";
-import usersMock from "@/usersMock.js"
-import { collection, getDocs, addDoc, updateDoc, doc, getDoc, query, where, FieldPath } from 'firebase/firestore'
+import { collection, getDocs, updateDoc, doc, getDoc, query, where } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
 
 

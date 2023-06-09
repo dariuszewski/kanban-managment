@@ -1,9 +1,9 @@
 <script setup>
-  import { ref, reactive, computed, watch } from 'vue'
+  import { reactive } from 'vue'
 import { useAuthStore } from '../stores/useAuthStore';
 import { auth } from '../components/firebase/config';
 
-  const authStore = useAuthStore()
+const authStore = useAuthStore()
   // form validation
   const rules = {
     email: [

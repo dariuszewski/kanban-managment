@@ -1,8 +1,7 @@
 <script setup>
-import { ref, reactive, computed, defineProps } from "vue";
+import { defineProps } from "vue";
 import router from '../router'
 
-import projectsMock from "@/projectsMock.js";
 
 const props = defineProps({
   // id: Number,
@@ -17,11 +16,9 @@ function computeProjectCompleteness() {
   const allTasks = project.tasks.length;
   if (allTasks > 0) {
     const doneTasks = project.tasks.filter(task => task.status === 'Done').length;
-    return (doneTasks/allTasks) * 100
+    return Math.round((doneTasks/allTasks) * 100)
   }
-  else {
-    return 0
-  }
+  return 0
 }
 
 function computeParticipantsCount() {

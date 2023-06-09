@@ -1,8 +1,7 @@
 <script setup>
-import { ref, computed, reactive, onMounted, watch, toRaw } from "vue";
+import { ref, computed, reactive, onMounted, watch } from "vue";
 
 import { useProjectStore } from "@/stores/project";
-import projectsMock from "@/projectsMock.js";
 import usersMock from "@/usersMock.js";
 
 

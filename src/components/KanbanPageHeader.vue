@@ -2,7 +2,6 @@
 import { ref, watch } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { useProjectStore } from "@/stores/project";
 
 ////////////////////////////////////////////////////////
 // const projectStore = useProjectStore();

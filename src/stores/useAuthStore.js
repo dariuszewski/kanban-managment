@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('authStore',{
         then(res => {
           localStorage.setItem("_userData", JSON.stringify(res.user))
           this._userData = res.user
-          router.push('/')
+          router.push('/projects')
         })
      },
      async logout(){
