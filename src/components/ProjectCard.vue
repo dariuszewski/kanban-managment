@@ -1,6 +1,7 @@
 <script setup>
 import { defineProps } from "vue";
 import router from '../router'
+import { useAuthStore } from '../stores/useAuthStore';
 
 
 const props = defineProps({
@@ -10,6 +11,10 @@ const props = defineProps({
   // participantsCount: Number
   project: Object
 });
+
+const authStore = useAuthStore();
+
+const isProjectOwner = props.project.owner === authStore.currentUser.uid
 
 function computeProjectCompleteness() {
   const project = props.project
@@ -56,13 +61,18 @@ function computeTasksCount() {
             <v-list-item-title>Open</v-list-item-title>
           </v-list-item>
         </router-link>
-
-        <v-list-item
-          class="menu-item"
-          clickable
+        
+        <router-link 
+          :to="{ name: 'manage', params: { id: props.project.id } }"
+          v-if="isProjectOwner"
         >
-          <v-list-item-title>Manage</v-list-item-title>
-        </v-list-item>
+          <v-list-item
+            class="menu-item"
+            clickable
+          >
+            <v-list-item-title>Manage</v-list-item-title>
+          </v-list-item>
+        </router-link>
       </v-list>
     </v-menu>
     <div
