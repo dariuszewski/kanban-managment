@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits, ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useProjectStore } from "@/stores/project";
 import { useAuthStore } from "@/stores/useAuthStore";
 import VueDatePicker from "@vuepic/vue-datepicker";
@@ -57,17 +57,16 @@ function cancelDelete() {
   confirmDialog.value = false
 }
 const key = ref(0);
-function deleteItem() {
+async function deleteItem() {
   // send DELETE request here
   projectStore.deleteTask(props.task.id)
+  emit('taskEdited')
   confirmDialog.value = false
   isOpen.value = false
 }
 
 async function saveChanges() {
 
-  // THIS NEEDS FORM VALIDATION AND AN ID!!!!!!!!!!!!!!!!!!
-  // WHOLE THING CAN ACTUALLY BE MADE MORE SIMILAR TO THE LOGIN FORM
   const year = date.value.getFullYear(); // Get the full year (e.g., 2023)
   const month = String(date.value.getMonth() + 1).padStart(2, '0'); // Get the month (0-11) and pad it with a leading zero if needed
   const day = String(date.value.getDate()).padStart(2, '0'); // Get the day of the month (1-31) and pad it with a leading zero if needed
@@ -130,7 +129,10 @@ watch(
         />
       </div>
 
-      <v-form class="taskEditForm">
+      <v-form 
+        class="taskEditForm" 
+        lazy-validation
+      >
         <v-row>
           <v-col sm="12">
             <v-text-field 
@@ -140,7 +142,9 @@ watch(
               density="compact"
               prepend-inner-icon="mdi-pencil"
               hide-details
-            />   
+            />
+            <small class="alert-msg" v-if="!taskTitle">Task title is required.</small>
+            <small v-else><br/></small>
           </v-col>
         </v-row>
         <v-row>
@@ -153,6 +157,8 @@ watch(
                 input-class-name="dp-custom-input"
                 required 
               />
+            <small class="alert-msg" v-if="!date">Task due date is required.</small>
+            <small v-else><br/></small>
             </div>
           </v-col>
         </v-row>
@@ -171,6 +177,8 @@ watch(
               chips
               hide-details
             />
+            <small class="alert-msg" v-if="!currentOwner">Task due date is required.</small>
+            <small v-else><br/></small>
           </v-col>
         </v-row>
         <v-row>
@@ -180,7 +188,10 @@ watch(
               label="Description"
               variant="underlined"
               prepend-inner-icon="mdi-pencil"
+              hide-details=""
             />
+            <small class="alert-msg" v-if="!description">Task due date is required.</small>
+            <small v-else><br/></small>
           </v-col>
         </v-row>
         <div class="buttons">
@@ -277,7 +288,8 @@ watch(
               <v-btn
                 class="custom-button"
                 prepend-icon="mdi-floppy"
-                @click="saveChanges"  
+                @click="saveChanges"
+                :disabled="!date || !taskTitle || !currentOwner || !description"
               >
                 <span>SAVE</span>
               </v-btn>
@@ -351,6 +363,10 @@ watch(
 
 ::v-deep(.dp-custom-input:hover) {
   border-bottom: 1px solid black;
+}
+
+.alert-msg {
+  color: red;
 }
 
 .custom-button {

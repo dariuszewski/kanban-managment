@@ -77,6 +77,10 @@ export const useProjectStore = defineStore("project", {
     },
     async deleteTask(taskId) {
       this.project.tasks = this.project.tasks.filter(task => task.id !== taskId)
+      const projectRef = doc(db, "projects", this.project.id);
+      await updateDoc(projectRef, {
+        tasks: this.project.tasks
+      });
     },
     async updateTask(taskId, data) {
       console.log('updating', taskId, 'with', data)

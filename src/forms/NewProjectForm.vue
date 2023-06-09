@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits, ref, watch, onBeforeMount } from "vue";
+import { ref, watch, onBeforeMount } from "vue";
 import { useProjectStore } from "@/stores/project";
 import { collection, getDocs, addDoc } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
@@ -33,7 +33,6 @@ const projectStore = useProjectStore();
 
 // required data
 const isOpen = ref(props.isOpen); // is v-dialog opened
-const formType = ref(props.formType);
 const projectTitle = ref('')
 const participants = ref([])
 
@@ -48,8 +47,6 @@ function closeForm() {
 }
 
 async function saveChanges() {
-  // THIS NEEDS FORM VALIDATION AND AN ID!!!!!!!!!!!!!!!!!!
-  // WHOLE THING CAN ACTUALLY BE MADE MORE SIMILAR TO THE LOGIN FORM
 
   const projectDetails = {
     lastTaskId: 0,
@@ -91,7 +88,7 @@ watch(
     <v-card>
       <div class="form-header">
         <span class="form-title">
-          {{ formType }} Create new project
+          Create new project
         </span>
         <v-btn
           variant="plain"
@@ -150,7 +147,8 @@ watch(
               <v-btn
                 class="custom-button bg-success"
                 prepend-icon="mdi-floppy"
-                @click="saveChanges"  
+                @click="saveChanges"
+                :disabled="!projectTitle"
               >
                 <span>Create</span>
               </v-btn>
