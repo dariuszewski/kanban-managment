@@ -1,5 +1,5 @@
 <script setup>
-import { RouterView, useRoute } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 import NavBar from './components/NavBar.vue'
 
 const route = useRoute()
@@ -14,9 +14,7 @@ const route = useRoute()
       />
       <v-main>
         <div class="main">
-          <!-- <v-app> -->
           <RouterView />
-          <!-- </v-app> -->
         </div>
       </v-main>
     </v-layout>
@@ -29,7 +27,6 @@ const route = useRoute()
   }
 
 .main {
-  /* min-height: 100vh; */
   height: 100%;
   margin: 0 2% 0 2%;
   padding: 0;
