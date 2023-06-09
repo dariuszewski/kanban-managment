@@ -1,23 +1,27 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
-
 import ProjectCard from "@/components/ProjectCard.vue"
 import AddProjectCard from '../components/AddProjectCard.vue'
-import { collection, getDocs, getDoc, doc } from 'firebase/firestore'
+import { collection, getDocs, getDoc, doc, query, or, where } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
 import { useAuthStore } from '../stores/useAuthStore'
 
 
-const authStore = useAuthStore() // currently its used only to show user, but will be needed to load projects (probably)
+const authStore = useAuthStore()
 
 const userFirstName = ref('') 
 const projects = ref([])
 
 onBeforeMount(async () => {
   const resp = await getDoc(doc(db, "users", authStore.currentUser.uid))
-  const data = resp.data()
-  userFirstName.value = data.firstName
-  const response = await getDocs(collection(db, 'projects'))
+  const user = resp.data()
+  userFirstName.value = user.firstName
+  const projectsRef = collection(db, 'projects')
+  const projectsQuery = query(projectsRef,  
+    or(where('participants', 'array-contains', authStore.currentUser.uid),
+      where('owner', '==', authStore.currentUser.uid)
+    ))
+  const response = await getDocs(projectsQuery)
   projects.value = response.docs.map(ref => {
     const data = ref.data()
     return {
@@ -91,7 +95,6 @@ function projectCreatedHandler(data) {
 <style scoped>
 
   #title {
-    /* color: grey; */
     color: var(--color-font-grey)
   }
 
