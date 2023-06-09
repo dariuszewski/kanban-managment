@@ -9,13 +9,16 @@
           class="mb-3"
           style="color: #1E293C; font-size: 60px;"
         >
-          User information 
+          Profile 
         </h2>
-       
         <v-row>
-          <v-col cols="5">
+          <v-col
+            cols="12"
+            sm="5"
+            md="5"
+          >
             <v-card class="pa-4">
-              <v-form>
+              <v-form class="flex-sm-column">
                 <v-alert
                   v-if="form.success"
                   class="mt-2 mb-5 bg-success"
@@ -64,9 +67,10 @@
               </v-form>
             </v-card>
           </v-col>
-          <v-col cols="3">
+          <v-col>
             <v-card class="pa-4 d-flex align-center justify-center transparent">
               <v-avatar
+                v-show="showAvatar"
                 size="250"
                 :style="{ backgroundColor: form.color }"
               >
@@ -94,10 +98,12 @@
 </template>
 
 <script setup>
-  import { onMounted, reactive, ref } from 'vue'
+  import { computed, onMounted, reactive, ref } from 'vue'
   import { db } from '../components/firebase/config'
   import { updateDoc, getDoc, doc} from "firebase/firestore"
   import { useAuthStore } from '../stores/useAuthStore';
+  import { useDisplay } from 'vuetify/lib/framework.mjs';
+
   const showColorPicker = ref(false)
   const form = reactive({
     firstName: '',
@@ -112,7 +118,7 @@
   const getInitials = () => form.firstName.charAt(0).toUpperCase() + form.lastName.charAt(0).toUpperCase();
   const toggleColorPicker = () => showColorPicker.value = !showColorPicker.value;
   const hideColorPicker = () =>  showColorPicker.value = false;
-  
+
   const authStore = useAuthStore()
   onMounted(async () => {
     try {
@@ -135,6 +141,10 @@
       setTimeout(()=>form.success = false, 1000)
   })
   }
+  const display = useDisplay()
+  const showAvatar = computed(() => {
+    return !display.xs.value
+  })
 </script>
 
 <style scoped>
