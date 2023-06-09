@@ -1,12 +1,29 @@
 <script setup>
-import { defineProps, defineEmits, ref, reactive, watch, computed, nextTick } from "vue";
+import { defineProps, defineEmits, ref, reactive, watch, computed, nextTick, onBeforeMount } from "vue";
 import { useProjectStore } from "@/stores/project";
 import projectsMock from '@/projectsMock.js'
+import { collection, getDocs, addDoc } from 'firebase/firestore'
+import { db } from '@/components/firebase/config.js'
 
 const props = defineProps({
   isOpen: Boolean,
   formType: String,
 });
+
+const usersSelectList = ref([])
+
+onBeforeMount(async () => {
+  const response = await getDocs(collection(db, 'users'))
+  usersSelectList.value = response.docs.map(ref => {
+    const data = ref.data()
+    return {
+      id: ref.id,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      fullName: data.firstName + " " + data.lastName,
+    }
+  })
+})
 
 
 const projectStore = useProjectStore();
@@ -32,10 +49,9 @@ async function saveChanges() {
   // WHOLE THING CAN ACTUALLY BE MADE MORE SIMILAR TO THE LOGIN FORM
 
   const projectDetails = {
-    id: 123,
     owner: 1,  //currentOwner.value.id,
     name: projectTitle.value,
-    participants: participants.value.map((el) => el.id),
+    participants: participants.value.map(el => el.id),
     tasks: [],
   }
 
@@ -44,6 +60,10 @@ async function saveChanges() {
   // POST REQUEST HERE
   // projectStore.insertProject(projectDetails)
   // projectsMock.push(projectDetails)
+
+  const docRef = await addDoc(collection(db, "projects"), projectDetails);
+  console.log("Document written with ID: ", docRef.id);
+
   closeForm()
   emit("projectCreated", projectDetails);
 }
@@ -92,9 +112,8 @@ watch(
           <v-col xs="12">
             <v-combobox
               v-model="participants"
-              :items="projectStore.getProjectParticipantsArray"
+              :items="usersSelectList"
               item-title="fullName"
-              item-value="id"
               label="Participants"
               variant="underlined"
               prepend-inner-icon="mdi-account-search"

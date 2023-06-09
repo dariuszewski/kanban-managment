@@ -1,13 +1,17 @@
 <script setup>
-import { ref, computed, reactive, onMounted, watch, toRaw } from "vue";
+import { ref, computed, reactive, onMounted, watch, toRaw, onBeforeMount } from "vue";
 import Draggable from "vue3-draggable";
 import KanbanPageHeader from "@/components/KanbanPageHeader.vue";
 import KanbanColumn from "@/components/KanbanColumn.vue";
 import KanbanTask from "@/components/KanbanTask.vue";
+import router from '../router'
 
 import { useProjectStore } from "@/stores/project";
+import { useAuthStore } from "@/stores/useAuthStore";
 import projectsMock from "@/projectsMock.js";
 import usersMock from "@/usersMock.js";
+import { collection, getDocs, addDoc, doc, getDoc } from 'firebase/firestore'
+import { db } from '@/components/firebase/config.js'
 
 
 const props = defineProps({
@@ -16,6 +20,7 @@ const props = defineProps({
 
 // global project instances and possible taskStatuses
 const projectStore = useProjectStore();
+const authStore = useAuthStore()
 const project = reactive({});
 const tasksStatuses = ["To Do", "In Progress", "Review", "Done"];
 
@@ -32,7 +37,7 @@ function filterTasks(status=false) {
   // variables in the third place. Also it would create considerations on where to 
   // put checkIfTaskIsNotFilteredOut()
   // return project.tasks.filter((task) => {
-    return projectStore.currentProject.tasks.filter((task) => {
+    return project.tasks.filter((task) => {
     // date range filter
     const isWithinDateRange =
       !dateRange.value ||
@@ -117,30 +122,32 @@ watchColumnStatusChanges(inProgressTasks, 'In Progress');
 watchColumnStatusChanges(reviewTasks, 'Review');
 watchColumnStatusChanges(doneTasks, 'Done');
 
-// FETCH THE DATA AND MOUNT HERE ////////////////////////////////////////////////
-const fetchProject = () => {
-  // Simulate an asynchronous API request with a delay
-  // GET request here
-  // The plan is to GET a project, assign it to Pinia store so it is accessible across =
-  // all components which would need it and also create a separate instance for filtartion.
-  setTimeout(() => {
-    // add ref loaded flag as false at the begenning and true at the end to wait for a data
-    projectStore.fetchProject(props.id)
-    
-    const p = projectsMock.find((p) => p.id === Number(props.id));
-    project.id = p.id;
-    project.name = p.name;
-    project.tasks = p.tasks;
-    project.participants = projectStore.getProjectParticipantsArray
+onBeforeMount(async () => {
+  const docRef = doc(db, "projects", props.id);
+  const docSnap = await getDoc(docRef);
 
-    assignPiniaContentToTaskArrays()
-
-  }, 500);
-};
-
-onMounted(() => {
-  fetchProject();
-});
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+    const data = docSnap.data()
+    project.id = docSnap.id;
+    project.owner = data.owner;
+    project.name = data.name;
+    project.tasks = data.tasks;
+    project.participants = data.participants
+    // user not allowed to see this project
+    const isParticipant = project.participants.includes(authStore.currentUser.uid)
+    const isOwner = project.owner === authStore.currentUser.uid
+    if (!(isParticipant || isOwner)) {
+      console.log('user', authStore.currentUser.uid, 'not in', project.participants, 'and not equal', project.owner);
+      router.push({name: 'forbidden'})
+    }
+  } else {
+    // docSnap.data() will be undefined in this case
+    // project does not exist
+    console.log("No such project, redirecting");
+    router.push({name: 'notFound'})
+  }
+})
 </script>
 
 
