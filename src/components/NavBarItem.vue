@@ -41,7 +41,7 @@ import { ref } from 'vue';
 
   const route = useRoute()
   watchEffect(()=> {
-    route.path.includes(props.path) ?
+    route.path.includes(props.path) || route.path.includes(props.path.slice(0,-1)) ?
       activityClass.value = 'active':
       activityClass.value = 'inactive'
   })

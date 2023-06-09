@@ -1,5 +1,6 @@
 <script setup>
 import { reactive, ref, watch } from "vue";
+import { useDisplay } from 'vuetify/lib/framework.mjs';
 import { useProjectStore } from "@/stores/project";
 import { useAuthStore } from "@/stores/useAuthStore";
 import VueDatePicker from "@vuepic/vue-datepicker";
@@ -17,6 +18,11 @@ const props = defineProps({
   isOpen: Boolean,
   formType: String,
 });
+
+const display = useDisplay()
+const height = computed(() => {
+    return display.xs.value ? '75%' : '60%'
+})
 
 
 const projectStore = useProjectStore();
@@ -113,6 +119,7 @@ watch(
   <v-dialog
     v-model="isOpen"
     max-width="728"
+    :height="height"
     scrollable
     @click:outside="closeForm"
   >

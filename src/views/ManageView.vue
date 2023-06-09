@@ -39,9 +39,9 @@ onBeforeMount(async () => {
 
   const projectParticipantsIds = projectStore.project.participants.map(p => p.id)
 
-  projectParticipants.value = allUsers.filter(el => projectParticipantsIds.includes(el.id))
-  nonParticipatingUsers.value = allUsers.filter(el => !projectParticipantsIds.includes(el.id))
   projectOwner.value = allUsers.find(el => projectStore.project.owner == el.id)
+  projectParticipants.value = allUsers.filter(el => projectParticipantsIds.includes(el.id) && el.id !== projectOwner.value.id)
+  nonParticipatingUsers.value = allUsers.filter(el => !projectParticipantsIds.includes(el.id) && el.id !== projectOwner.value.id)
 })
 const searchQuery = ref('')
 
