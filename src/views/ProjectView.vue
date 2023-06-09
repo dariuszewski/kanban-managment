@@ -90,10 +90,10 @@ let allTasks = reactive({
 })
 
 function assignPiniaContentToTaskArrays() {
-  toDoTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'To Do');
-  inProgressTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'In Progress');
-  reviewTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'Review');
-  doneTasks.value = projectStore.currentProject.tasks.filter(task => task.status === 'Done'); 
+  toDoTasks.value = projectStore.project.tasks.filter(task => task.status === 'To Do');
+  inProgressTasks.value = projectStore.project.tasks.filter(task => task.status === 'In Progress');
+  reviewTasks.value = projectStore.project.tasks.filter(task => task.status === 'Review');
+  doneTasks.value = projectStore.project.tasks.filter(task => task.status === 'Done'); 
 }
 let refreshTrigger = ref(0);
 function refreshColumnsContentsWithPiniaStore() {
@@ -123,30 +123,13 @@ watchColumnStatusChanges(reviewTasks, 'Review');
 watchColumnStatusChanges(doneTasks, 'Done');
 
 onBeforeMount(async () => {
-  const docRef = doc(db, "projects", props.id);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-    const data = docSnap.data()
-    project.id = docSnap.id;
-    project.owner = data.owner;
-    project.name = data.name;
-    project.tasks = data.tasks;
-    project.participants = data.participants
-    // user not allowed to see this project
-    const isParticipant = project.participants.includes(authStore.currentUser.uid)
-    const isOwner = project.owner === authStore.currentUser.uid
-    if (!(isParticipant || isOwner)) {
-      console.log('user', authStore.currentUser.uid, 'not in', project.participants, 'and not equal', project.owner);
-      router.push({name: 'forbidden'})
-    }
-  } else {
-    // docSnap.data() will be undefined in this case
-    // project does not exist
-    console.log("No such project, redirecting");
-    router.push({name: 'notFound'})
-  }
+  await projectStore.fetchProject(props.id)
+  console.log('fetched project', projectStore.project)
+  project.id = projectStore.project.id;
+  project.owner = projectStore.project.owner;
+  project.name = projectStore.project.name;
+  project.tasks = projectStore.project.tasks;
+  project.participants = projectStore.project.participants
 })
 </script>
 
