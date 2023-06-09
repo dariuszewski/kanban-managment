@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, watch } from "vue";
+import { reactive, ref, watch, computed } from "vue";
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 import { useProjectStore } from "@/stores/project";
 import { useAuthStore } from "@/stores/useAuthStore";
