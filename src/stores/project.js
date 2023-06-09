@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 import { collection, getDocs, updateDoc, doc, getDoc, query, where } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
-
+import { useAuthStore } from '@/stores/useAuthStore.js'
+import router from '../router'
 
 export const useProjectStore = defineStore("project", {
   state: () => ({
@@ -52,8 +53,14 @@ export const useProjectStore = defineStore("project", {
             email: userData.email,
             color: userData.color,
           }
-        })
+        }) //pufUYH2PAKU5etxzU2x9
         this.project.participants = participants
+        const userStore = useAuthStore()
+        const userId = userStore.currentUser.uid
+        const userIsParticipant = participants.find(user => user.id === userId)
+        if (!userIsParticipant) {
+          router.push({name: 'forbidden'})
+        }
       } else {
         // docSnap.data() will be undefined in this case
         // project does not exist
