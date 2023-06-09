@@ -2,7 +2,6 @@
   <v-app>
     <v-main
       class="d-flex align-center justify-center"
-      style="height: 100vh;"
     >
       <v-container fluid>
         <h2
@@ -67,8 +66,8 @@
               </v-form>
             </v-card>
           </v-col>
-          <v-col>
-            <v-card class="pa-4 d-flex align-center justify-center transparent">
+          <v-col class="d-flex-column">
+            <v-card class="pa-4 d-flex justify-center transparent">
               <v-avatar
                 v-show="showAvatar"
                 size="250"
@@ -80,7 +79,7 @@
                 >{{ getInitials() }}</span>
               </v-avatar>
             </v-card>
-            <v-card class="pa-4 d-flex transparent">
+            <v-card class="pa-4 d-flex transparent justify-center">
               <v-color-picker
                 v-if="showColorPicker"
                 v-model="form.color"
@@ -133,7 +132,6 @@
     }
   })
   const submit = () => {
-    console.log(authStore.currentUser.uid)
     updateDoc(doc(db,"users", authStore.currentUser.uid), {
       color: form.color
     }).then(res => {
@@ -150,6 +148,10 @@
 <style scoped>
 .v-card.transparent {
   box-shadow: none !important;
+  background-color: transparent;
 }
 
+.v-main {
+  background: var(--color-background);
+}
 </style>
