@@ -36,6 +36,7 @@ onBeforeMount(async () => {
 
 function projectCreatedHandler(data) {
   console.log('project created handler', data)
+  projects.value.push(data)
 }
 
 </script>

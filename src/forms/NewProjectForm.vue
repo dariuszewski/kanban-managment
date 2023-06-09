@@ -4,6 +4,10 @@ import { useProjectStore } from "@/stores/project";
 import projectsMock from '@/projectsMock.js'
 import { collection, getDocs, addDoc } from 'firebase/firestore'
 import { db } from '@/components/firebase/config.js'
+import { useAuthStore } from '../stores/useAuthStore'
+
+
+const authStore = useAuthStore()
 
 const props = defineProps({
   isOpen: Boolean,
@@ -22,7 +26,7 @@ onBeforeMount(async () => {
       lastName: data.lastName,
       fullName: data.firstName + " " + data.lastName,
     }
-  })
+  }).filter(el => el.id !== authStore.currentUser.uid)
 })
 
 
@@ -50,9 +54,9 @@ async function saveChanges() {
 
   const projectDetails = {
     lastTaskId: 0,
-    owner: 1,  //currentOwner.value.id,
+    owner: authStore.currentUser.uid,
     name: projectTitle.value,
-    participants: participants.value.map(el => el.id),
+    participants: [...participants.value.map(el => el.id), authStore.currentUser.uid],
     tasks: [],
   }
 
@@ -64,6 +68,7 @@ async function saveChanges() {
 
   const docRef = await addDoc(collection(db, "projects"), projectDetails);
   console.log("Document written with ID: ", docRef.id);
+  projectDetails.id = docRef.id;
 
   closeForm()
   emit("projectCreated", projectDetails);
