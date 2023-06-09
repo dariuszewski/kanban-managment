@@ -4,7 +4,7 @@
     rail
     permanent
     color="#1E293C"
-    class="navigation-drawer"
+    style="position: fixed;"
   >
     <v-list
       nav
@@ -26,8 +26,8 @@
     <v-divider />
     <v-list
       nav
+      height="90%"
       class="d-flex flex-column"
-      height="90vh"
     >
       <nav-bar-item
         path="projects"
