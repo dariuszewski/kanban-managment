@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import projectsMock from "@/projectsMock.js";
 import usersMock from "@/usersMock.js"
+import { collection, getDocs, addDoc, doc, getDoc, query, where, FieldPath } from 'firebase/firestore'
+import { db } from '@/components/firebase/config.js'
 
 
 export const useProjectStore = defineStore("project", {
@@ -25,9 +27,40 @@ export const useProjectStore = defineStore("project", {
 
   actions: {
     async fetchProject(projectId) {
-      const selectedProject = projectsMock.find((p) => p.id === Number(projectId));
-      this.project = selectedProject;
-      this.tasks = selectedProject.tasks;
+      const projectRef = doc(db, "projects", projectId);
+      const projectSnap = await getDoc(projectRef);
+    
+      if (projectSnap.exists()) {
+        console.log("Document data:", projectSnap.data());
+        const projectData = projectSnap.data()
+        this.project = {
+          id: projectSnap.id,
+          owner: projectData.owner,
+          name: projectData.name,
+          tasks: projectData.tasks,
+          // participants are queried by separate request below
+        }
+        // query by document id
+        const usersQuery = query(collection(db, 'users'), where('__name__', "in", projectData.participants))
+        const usersRef = await getDocs(usersQuery)
+        const participants = usersRef.docs.map(ref => {
+          const userData = ref.data()
+          return {
+            id: ref.id,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            fullName: `${userData.firstName} ${userData.lastName}`,
+            email: userData.email,
+            color: userData.color,
+          }
+        })
+        this.project.participants = participants
+      } else {
+        // docSnap.data() will be undefined in this case
+        // project does not exist
+        console.log("No such project, redirecting");
+        router.push({name: 'notFound'})
+      }
     },
     selectProject(project) {
       this.project = project;
