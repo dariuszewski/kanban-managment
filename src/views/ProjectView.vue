@@ -113,6 +113,7 @@ async function watchColumnStatusChanges(columnRef, columnStatus) {
       console.log('Send post request here... (below task to update)')
       console.log(taskToUpdate)
       taskToUpdate.status = columnStatus;
+      projectStore.updateTask(taskToUpdate.id, taskToUpdate)
     }  
   }, { immediate: true })
 }

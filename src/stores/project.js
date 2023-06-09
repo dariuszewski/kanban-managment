@@ -38,6 +38,7 @@ export const useProjectStore = defineStore("project", {
           owner: projectData.owner,
           name: projectData.name,
           tasks: projectData.tasks,
+          lastTaskId: projectData.lastTaskId,
           // participants are queried by separate request below
         }
         // query by document id
@@ -72,15 +73,25 @@ export const useProjectStore = defineStore("project", {
       this.project.tasks = this.project.tasks.filter(task => task.id !== taskId)
     },
     async updateTask(taskId, data) {
+      console.log('updating', taskId, 'with', data)
       this.project.tasks = this.project.tasks.filter(task => task.id !== taskId)
-      this.project.tasks.push(data) 
-    },
-    async insertTask(data) {
       this.project.tasks.push(data)
-      const projectRef = doc(db, "projects", this.project.id);
 
+      const projectRef = doc(db, "projects", this.project.id);
       await updateDoc(projectRef, {
         tasks: this.project.tasks
+      });
+    },
+    async insertTask(data) {
+      const taskId = parseInt(this.project.lastTaskId) + 1
+      data.id = taskId
+      this.project.tasks.push(data)
+      this.project.lastTaskId = taskId
+
+      const projectRef = doc(db, "projects", this.project.id);
+      await updateDoc(projectRef, {
+        tasks: this.project.tasks,
+        lastTaskId: taskId,
       });
     },
     async removeParticipant(userId) {
